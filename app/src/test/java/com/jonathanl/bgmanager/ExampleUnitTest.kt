@@ -1,8 +1,7 @@
-package com.example.bgmanager
-
-import org.junit.Test
+package com.jonathanl.bgmanager
 
 import org.junit.Assert.*
+import org.junit.Test
 
 /**
  * Example local unit test, which will execute on the development machine (host).

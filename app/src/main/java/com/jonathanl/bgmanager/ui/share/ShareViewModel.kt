@@ -1,4 +1,4 @@
-package com.example.bgmanager.ui.share
+package com.jonathanl.bgmanager.ui.share
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

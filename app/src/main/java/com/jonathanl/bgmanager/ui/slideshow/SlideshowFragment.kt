@@ -1,4 +1,4 @@
-package com.example.bgmanager.ui.slideshow
+package com.jonathanl.bgmanager.ui.slideshow
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.bgmanager.R
+import com.jonathanl.bgmanager.R
 
 class SlideshowFragment : Fragment() {
 

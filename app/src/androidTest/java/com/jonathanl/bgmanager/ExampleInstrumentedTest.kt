@@ -1,4 +1,4 @@
-package com.example.bgmanager
+package com.jonathanl.bgmanager
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
