@@ -1,0 +1,6 @@
+- Activity vs Fragment?
+- Should I start adding Dagger2/Koin?
+- Data/View binding (whats the diff, and pros and cons)
+- Architecture (M-V-VM, M-V-I, how is Interactor different?)
+- asynctasks vs Rx vs Coroutines\
+- observables vs LiveData
