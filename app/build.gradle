@@ -9,19 +9,70 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+
+    def versionPropsFile = file('version.properties')
+    def increment = 0
+    def runTasks = gradle.startParameter.taskNames
+    def mVersionName = ""
+    def mFileName = ""
+
+    Properties versionProps = new Properties()
+    if (!versionPropsFile.exists()) {
+        versionProps['VERSION_MAJOR'] = "0"
+        versionProps['VERSION_MINOR'] = "0"
+        versionProps['VERSION_PATCH'] = "0"
+        versionProps['VERSION_BUILD'] = "0"
+        versionProps['VERSION_CODE'] = "1"
+        versionProps.store(versionPropsFile.newWriter(), null)
+    }
+
+    if ('assembleRelease' in runTasks) {
+        increment = 1
+    }
+
+    if (versionPropsFile.canRead()) {
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        versionProps['VERSION_PATCH'] = (versionProps['VERSION_PATCH'].toInteger() + increment).toString()
+        versionProps['VERSION_CODE'] = (versionProps['VERSION_CODE'].toInteger() + increment).toString()
+        versionProps['VERSION_BUILD'] = (versionProps['VERSION_BUILD'].toInteger() + 1).toString()
+
+        // store new version numbers
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        mVersionName = "v${versionProps['VERSION_MAJOR']}.${versionProps['VERSION_MINOR']}.${versionProps['VERSION_PATCH']}"
+        mFileName = "bgmanager-${mVersionName}.apk"
+
+        defaultConfig {
+            applicationId 'com.jonathanl.bgmanager'
+            minSdkVersion 23
+            targetSdkVersion 29
+            versionCode versionProps['VERSION_CODE'].toInteger()
+            versionName "${mVersionName} Build: ${versionProps['VERSION_BUILD']}"
+        }
+
+    } else {
+        throw new FileNotFoundException("Could not read version.properties!")
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (output.outputFile != null && output.outputFile.name.endsWith('.apk')) {
+                outputFileName = mFileName
+            }
+        }
+    }
+
     defaultConfig {
-        applicationId 'com.jonathanl.bgmanager'
-        minSdkVersion 23
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    dataBinding {
+        enabled = true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
@@ -55,4 +106,7 @@ dependencies {
     // UI Test Dependencies
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+
 }
