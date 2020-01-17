@@ -6,13 +6,28 @@ jobs:
   unitTest:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: unitTest
-      run: ./gradlew test
-     
+      run: ./gradlew testDebugUnitTest
+
+  uiTest:
+    runs-on: macOS-latest
+    strategy:
+      matrix:
+        api-level: [23, 25, 27, 29]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          script: ./gradlew connectedDebugAndroidTest
+
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: buildDebug
       run: ./gradlew assembleDebug
