@@ -12,16 +12,10 @@
         tools:layout="@layout/fragment_search" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.jonathanl.bgmanager.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.jonathanl.bgmanager.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_game_list"
+        android:name="com.jonathanl.bgmanager.ui.gamelist.GameListFragment"
+        android:label="@string/menu_game_list"
+        tools:layout="@layout/fragment_game_list" />
 
     <fragment
         android:id="@+id/nav_tools"

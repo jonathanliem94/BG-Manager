@@ -13,8 +13,7 @@
 
     <!-- Side Navigation Menu Strings -->
     <string name="menu_search">Search</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_game_list">Game List</string>
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
