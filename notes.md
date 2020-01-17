@@ -4,3 +4,5 @@
 - Architecture (M-V-VM, M-V-I, how is Interactor different?)
 - asynctasks vs Rx vs Coroutines\
 - observables vs LiveData
+- Search intents can only be handled by activities, not fragments?
+- ViewModel are hard to created outside of fragments?
