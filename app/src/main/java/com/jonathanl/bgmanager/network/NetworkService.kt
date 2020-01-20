@@ -1,0 +1,34 @@
+package com.jonathanl.bgmanager.network
+
+import io.reactivex.Observable
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.jaxb.JaxbConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
+
+const val BASE_URL = "http://www.boardgamegeek.com"
+const val BASE_API_1 = "/xmlapi"
+const val BASE_API_2 = "/xmlapi2"
+
+
+interface NetworkService {
+
+    @GET("${BASE_API_2}/search")
+    fun getBoardGameSearchResults(
+        @Query("query") game_name: String,
+        @Query("type") game_type: String = "boardgame"):
+            Observable<BoardGameSearchResults>
+
+    companion object {
+        fun createNetworkService(): NetworkService {
+            val retrofit = Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(JaxbConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+            return retrofit.create(NetworkService::class.java)
+        }
+    }
+
+}
