@@ -3,6 +3,13 @@ name: CI
 on: [push]
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: buildDebug
+        run: ./gradlew assembleDebug
+
   unitTest:
     runs-on: ubuntu-latest
     steps:
@@ -24,10 +31,3 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           script: ./gradlew connectedDebugAndroidTest
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: buildDebug
-      run: ./gradlew assembleDebug
