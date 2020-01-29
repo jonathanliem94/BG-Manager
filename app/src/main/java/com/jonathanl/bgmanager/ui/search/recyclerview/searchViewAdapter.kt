@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
+import com.jonathanl.bgmanager.network.BoardGameResult
 import kotlinx.android.synthetic.main.search_view.view.*
 
-class SearchViewAdapter(private val inputData: Array<String>): RecyclerView.Adapter<SearchViewAdapter.SearchViewHolder>() {
+class SearchViewAdapter(private var inputData: List<BoardGameResult>): RecyclerView.Adapter<SearchViewAdapter.SearchViewHolder>() {
 
     // reference for each data item
     class SearchViewHolder(val cardView: CardView): RecyclerView.ViewHolder(cardView)
@@ -29,7 +30,13 @@ class SearchViewAdapter(private val inputData: Array<String>): RecyclerView.Adap
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.cardView.search_result_text.text = inputData[position]
+        holder.cardView.search_result_text.text = inputData.elementAt(position).boardGameNameResult.gameName
         holder.cardView.search_result_image.setImageResource(R.drawable.ic_launcher_background)
     }
+
+    fun setInputData(newData: List<BoardGameResult>) {
+        inputData = newData
+        notifyDataSetChanged()
+    }
+
 }

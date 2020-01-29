@@ -10,6 +10,7 @@ class RepositoryTest {
 
     private val repositoryUnderTest: Repository = Repository()
 
+    // Note: Network request is NOT mocked
     @Test
     fun checkMakeBoardGameSearch() {
         var result = BoardGameSearchResults()
@@ -17,7 +18,6 @@ class RepositoryTest {
             .subscribeBy {
                 result = it
             }
-
         Assert.assertEquals("8", result.total)
         Assert.assertNotNull(result.resultsArray)
         Assert.assertEquals(result.total, result.resultsArray.size.toString())

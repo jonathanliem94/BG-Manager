@@ -1,5 +1,8 @@
 package com.jonathanl.bgmanager
 
+import android.app.SearchManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -11,10 +14,13 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import android.widget.SearchView
+import androidx.activity.viewModels
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private val sharedViewModel: SharedViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +46,46 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        handleSearchIntent()
     }
 
+    private fun handleSearchIntent() {
+        if (Intent.ACTION_SEARCH == intent.action) {
+            intent.getStringExtra(SearchManager.QUERY)?.also {
+                sharedViewModel.searchQueryPublishSubject.onNext(it)
+            }
+        }
+    }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleSearchIntent()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.action_bar, menu)
+
+        // Associate searchable configuration with the SearchView
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        (menu.findItem(R.id.search_action_bar).actionView as SearchView).apply {
+            setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    if (query != null) {
+                        sharedViewModel.searchQueryPublishSubject.onNext(query)
+                    }
+                    return true
+                }
+
+            })
+        }
+
         return true
     }
 
@@ -52,6 +93,8 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+
 
 }
 

@@ -1,38 +1,32 @@
 package com.jonathanl.bgmanager.network
 
-import javax.xml.bind.annotation.XmlAttribute
-import javax.xml.bind.annotation.XmlElement
-import javax.xml.bind.annotation.XmlElementWrapper
-import javax.xml.bind.annotation.XmlRootElement
+import org.simpleframework.xml.Attribute
+import org.simpleframework.xml.Element
+import org.simpleframework.xml.ElementList
+import org.simpleframework.xml.Root
 
 /* XML unmarshalling for Search Boardgame Request */
 
-@XmlRootElement(name = "items")
-data class BoardGameSearchResults(@XmlAttribute val total: String = "",
-                             @XmlAttribute val termsofuse: String = "")
-{
+@Root(name = "items", strict = false)
+data class BoardGameSearchResults(
+    @field:Attribute(name = "total") var total: String = "",
+    @field:Attribute(name = "termsofuse") var termsofuse: String = "",
+    @field:ElementList(name = "item", inline = true) var resultsArray: List<BoardGameResult> = arrayListOf())
 
-    @XmlElement(name = "item")
-    val resultsArray: List<BoardGameResult> = mutableListOf(BoardGameResult())
+@Root(name = "item", strict = false)
+data class BoardGameResult(
+    @field:Attribute(name = "type") var type: String = "",
+    @field:Attribute(name = "id") var gameId: String = "",
+    @field:Element(name = "name") var boardGameNameResult: BoardGameName = BoardGameName(),
+    @field:Element(name = "yearpublished", required = false) var yearPublished: YearOfPublication = YearOfPublication())
 
-}
+@Root(name = "name", strict = false)
+data class BoardGameName(
+    @field:Attribute(name = "type") var type: String = "",
+    @field:Attribute(name = "value") var gameName: String = "")
 
-data class BoardGameResult(@XmlAttribute(name = "type") val type: String = "",
-                      @XmlAttribute(name = "id") val gameId: String = "")
-{
-
-    @XmlElement(name = "name")
-    val boardGameNameResult: BoardGameName = BoardGameName()
-
-    @XmlElement(name = "yearpublished")
-    val yearPublished: YearOfPublication = YearOfPublication()
-
-}
-
-data class BoardGameName(@XmlAttribute(name = "type") val type: String = "",
-                         @XmlAttribute(name = "value") val gameName: String = "")
-
-data class YearOfPublication(@XmlAttribute(name = "value") val year: String = "")
-
+@Root(name = "yearpublished", strict = false)
+data class YearOfPublication(
+    @field:Attribute(name = "value") var year: String = "")
 
 /* XML unmarshalling for  */
