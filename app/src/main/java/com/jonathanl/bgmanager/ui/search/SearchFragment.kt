@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.SharedViewModel
-import com.jonathanl.bgmanager.network.BoardGameResult
 import com.jonathanl.bgmanager.ui.home.SearchViewModel
 import com.jonathanl.bgmanager.ui.search.recyclerview.SearchViewAdapter
 import io.reactivex.disposables.Disposable
@@ -26,9 +25,6 @@ class SearchFragment : Fragment() {
     private val searchViewModel: SearchViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
-    private var listOfSearchResult: List<BoardGameResult> = arrayListOf()
     lateinit var disposable: Disposable
 
     override fun onCreateView(
@@ -43,14 +39,11 @@ class SearchFragment : Fragment() {
             textView.text = it
         })
 
-        viewManager = LinearLayoutManager(this.context)
-        viewAdapter = SearchViewAdapter(listOfSearchResult)
         recyclerView = root.findViewById<RecyclerView>(R.id.searchPage_recyclerView).apply {
-            setHasFixedSize(true)
             // use a linear layout manager
-            layoutManager = viewManager
+            layoutManager = LinearLayoutManager(this.context)
             // specify an viewAdapter
-            adapter = viewAdapter
+            adapter = SearchViewAdapter()
         }
 
         // Subscribe to search results in sharedviewmodel
@@ -65,7 +58,7 @@ class SearchFragment : Fragment() {
             .subscribeBy (
                 onNext = {
                     this.activity?.runOnUiThread {
-                        (recyclerView.adapter as SearchViewAdapter).setInputData(it.resultsArray)
+                        (recyclerView.adapter as SearchViewAdapter).submitList(it.resultsArray)
                     }
                 },
                 onError = {

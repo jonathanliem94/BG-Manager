@@ -79,6 +79,8 @@ class MainActivity : AppCompatActivity() {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     if (query != null) {
                         sharedViewModel.searchQueryPublishSubject.onNext(query)
+                        //ensure focus on search bar is lost after a search
+                        this@apply.onActionViewCollapsed()
                     }
                     return true
                 }

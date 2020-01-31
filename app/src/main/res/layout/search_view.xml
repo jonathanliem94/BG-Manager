@@ -23,4 +23,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/search_name_not_found"/>
+
+    <TextView
+        android:id="@+id/search_result_game_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/search_name_not_found"
+        android:textAlignment="textEnd" />
 </androidx.cardview.widget.CardView>

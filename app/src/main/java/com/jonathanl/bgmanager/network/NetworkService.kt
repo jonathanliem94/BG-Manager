@@ -20,6 +20,12 @@ interface NetworkService {
         @Query("type") game_type: String = "boardgame"):
             Observable<BoardGameSearchResults>
 
+    @GET("${BASE_API_1}/boardgame")
+    fun getBoardGameInfo(
+        @Query("stats") stats: String = "0",
+        @Query("historical") playStats: String = "0"
+    ): Observable<BoardGameInfo>
+
     companion object {
         fun createNetworkService(): NetworkService {
             val retrofit = Retrofit.Builder()

@@ -29,4 +29,8 @@ data class BoardGameName(
 data class YearOfPublication(
     @field:Attribute(name = "value") var year: String = "")
 
-/* XML unmarshalling for  */
+/* XML unmarshalling for  Get Boardgame Info Request */
+
+data class BoardGameInfo(
+    @field:Attribute(name = "test") var name: String = ""
+)
