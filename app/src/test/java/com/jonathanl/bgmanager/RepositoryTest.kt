@@ -4,13 +4,14 @@ import com.jonathanl.bgmanager.network.BoardGameSearchResults
 import com.jonathanl.bgmanager.repository.Repository
 import io.reactivex.rxkotlin.subscribeBy
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 
 class RepositoryTest {
 
     private val repositoryUnderTest: Repository = Repository()
 
-    // Note: Network request is NOT mocked
+    @Ignore("Network call is not mocked")
     @Test
     fun checkMakeBoardGameSearch() {
         var result = BoardGameSearchResults()
@@ -18,7 +19,7 @@ class RepositoryTest {
             .subscribeBy {
                 result = it
             }
-        Assert.assertEquals("8", result.total)
+        Assert.assertEquals("9", result.total)
         Assert.assertNotNull(result.resultsArray)
         Assert.assertEquals(result.total, result.resultsArray.size.toString())
     }
