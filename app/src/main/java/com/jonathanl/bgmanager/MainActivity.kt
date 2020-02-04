@@ -46,21 +46,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        handleSearchIntent()
-    }
-
-    private fun handleSearchIntent() {
-        if (Intent.ACTION_SEARCH == intent.action) {
-            intent.getStringExtra(SearchManager.QUERY)?.also {
-                sharedViewModel.searchQueryPublishSubject.onNext(it)
-            }
-        }
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        handleSearchIntent()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -84,7 +69,6 @@ class MainActivity : AppCompatActivity() {
                     }
                     return true
                 }
-
             })
         }
 
