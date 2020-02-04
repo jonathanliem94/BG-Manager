@@ -33,12 +33,15 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         //Databinding, inflating the view, and setting the viewmodel
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         binding.viewmodel = searchViewModel
 
-        val view = binding.root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById<RecyclerView>(R.id.searchPage_recyclerView).apply {
             // use a linear layout manager
@@ -50,8 +53,6 @@ class SearchFragment : Fragment() {
         // Subscribe to search results in sharedviewmodel
         subscribeToSearchResults()
         subscribeToWhenSearchIsInvoked()
-
-        return view
     }
 
     private fun subscribeToSearchResults() {
@@ -68,7 +69,6 @@ class SearchFragment : Fragment() {
                     Log.e("SearchFragment", "subscribe to search results failed, $it")
                 }
             )
-
         compositeDisposable.add(disposable)
     }
 
@@ -84,13 +84,12 @@ class SearchFragment : Fragment() {
                     Log.e("SearchFragment", "subscribe to when search is invoked failed, $it")
                 }
             )
-
         compositeDisposable.add(disposable)
     }
 
     override fun onDestroyView() {
-        compositeDisposable.dispose()
         super.onDestroyView()
+        compositeDisposable.clear()
     }
 
 }
