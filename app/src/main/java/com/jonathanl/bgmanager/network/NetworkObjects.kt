@@ -11,7 +11,7 @@ import org.simpleframework.xml.Root
 data class BoardGameSearchResults(
     @field:Attribute(name = "total") var total: String = "",
     @field:Attribute(name = "termsofuse") var termsofuse: String = "",
-    @field:ElementList(name = "item", inline = true) var resultsArray: List<BoardGameResult> = arrayListOf())
+    @field:ElementList(name = "item", inline = true, required = false) var resultsArray: List<BoardGameResult> = arrayListOf())
 
 @Root(name = "item", strict = false)
 data class BoardGameResult(

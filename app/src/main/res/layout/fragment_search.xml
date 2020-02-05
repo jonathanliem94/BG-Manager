@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.jonathanl.bgmanager.ui.home.SearchViewModel" />
+            type="com.jonathanl.bgmanager.ui.search.SearchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,6 +23,7 @@
             android:textAlignment="center"
             android:textSize="20sp"
             android:text="@{viewmodel.text}"
+            android:visibility="@{viewmodel.textViewVisibility}"
             app:layout_constraintBottom_toTopOf="@+id/searchPage_recyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

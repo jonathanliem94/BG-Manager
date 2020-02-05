@@ -14,8 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.SharedViewModel
 import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
-import com.jonathanl.bgmanager.ui.home.SearchViewModel
+import com.jonathanl.bgmanager.network.BoardGameSearchResults
 import com.jonathanl.bgmanager.ui.search.recyclerview.SearchViewAdapter
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -58,12 +59,10 @@ class SearchFragment : Fragment() {
     private fun subscribeToSearchResults() {
         val disposable: Disposable = sharedViewModel.searchResults
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy (
                 onNext = {
-                    this.activity?.runOnUiThread {
-                        (recyclerView.adapter as SearchViewAdapter).submitList(it.resultsArray)
-                        searchViewModel.setVisibilityAfterSearch()
-                    }
+                    handleSearchResults(it)
                 },
                 onError = {
                     Log.e("SearchFragment", "subscribe to search results failed, $it")
@@ -85,6 +84,15 @@ class SearchFragment : Fragment() {
                 }
             )
         compositeDisposable.add(disposable)
+    }
+
+    private fun handleSearchResults(results: BoardGameSearchResults) {
+        if (results.resultsArray.isNullOrEmpty()) {
+            searchViewModel.setVisibilityAfterSearchWithNoResults()
+        } else {
+            (recyclerView.adapter as SearchViewAdapter).submitList(results.resultsArray)
+            searchViewModel.setVisibilityAfterSearchWithResults()
+        }
     }
 
     override fun onDestroyView() {

@@ -1,4 +1,4 @@
-package com.jonathanl.bgmanager.ui.home
+package com.jonathanl.bgmanager.ui.search
 
 import android.view.View
 import androidx.databinding.ObservableField
@@ -8,25 +8,36 @@ import androidx.lifecycle.ViewModel
 class SearchViewModel : ViewModel() {
 
     val text = ObservableField<String>()
-
+    val textViewVisibility = ObservableInt()
     val progressBarVisibility = ObservableInt()
-
     val recyclerViewVisibility = ObservableInt()
 
     init {
-        text.set("This is search Fragment")
+        text.set("Let's start a search!")
+        textViewVisibility.set(View.VISIBLE)
         progressBarVisibility.set(View.GONE)
         recyclerViewVisibility.set(View.VISIBLE)
     }
 
     fun setVisibilityDuringSearch() {
-        recyclerViewVisibility.set(View.GONE)
+        text.set("Searching...")
+        textViewVisibility.set(View.VISIBLE)
         progressBarVisibility.set(View.VISIBLE)
+        recyclerViewVisibility.set(View.GONE)
     }
 
-    fun setVisibilityAfterSearch() {
+    fun setVisibilityAfterSearchWithResults() {
+        text.set("Let's start a search!")
+        textViewVisibility.set(View.GONE)
         progressBarVisibility.set(View.GONE)
         recyclerViewVisibility.set(View.VISIBLE)
+    }
+
+    fun setVisibilityAfterSearchWithNoResults() {
+        text.set("Oops, there seems to be no results!")
+        textViewVisibility.set(View.VISIBLE)
+        progressBarVisibility.set(View.GONE)
+        recyclerViewVisibility.set(View.GONE)
     }
 
 }

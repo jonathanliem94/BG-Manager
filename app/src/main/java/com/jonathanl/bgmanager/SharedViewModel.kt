@@ -31,7 +31,7 @@ class SharedViewModel: ViewModel() {
     private fun subscribeToSearchQueryPublishSubject(){
         disposable = searchQueryPublishSubject
             .filter{it.isNotBlank()}
-            .debounce(500, TimeUnit.MILLISECONDS)
+            .debounce(1, TimeUnit.SECONDS)
             .subscribeBy {
                 query -> repository.makeBoardGameSearch(query)
                     .subscribeOn(Schedulers.io())
