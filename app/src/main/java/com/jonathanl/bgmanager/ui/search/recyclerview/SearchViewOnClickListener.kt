@@ -4,7 +4,7 @@ import android.view.View
 import androidx.cardview.widget.CardView
 import androidx.navigation.findNavController
 import com.jonathanl.bgmanager.ui.search.SearchFragmentDirections
-import kotlinx.android.synthetic.main.search_view.view.*
+import kotlinx.android.synthetic.main.recycler_search_view.view.*
 
 class SearchViewOnClickListener: View.OnClickListener{
     override fun onClick(v: View?) {

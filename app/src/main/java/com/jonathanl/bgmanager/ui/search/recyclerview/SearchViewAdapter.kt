@@ -10,10 +10,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.network.BoardGameResult
-import kotlinx.android.synthetic.main.search_view.view.*
+import kotlinx.android.synthetic.main.recycler_search_view.view.*
 
-
-class SearchViewAdapter():
+class SearchViewAdapter:
     ListAdapter<BoardGameResult, SearchViewAdapter.SearchViewHolder>(BoardGameResultDiffCallback()) {
 
     // Provide itemcallback to allow DiffUtil to determine what is different from the old and new items
@@ -31,7 +30,7 @@ class SearchViewAdapter():
     // Create new views (by layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         // create a new view
-        val cardView = LayoutInflater.from(parent.context).inflate(R.layout.search_view, parent, false) as CardView
+        val cardView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_search_view, parent, false) as CardView
         // set the view's size, margins, paddings and layout parameters
         return SearchViewHolder(cardView)
 

@@ -44,7 +44,7 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view.findViewById<RecyclerView>(R.id.searchPage_recyclerView).apply {
+        recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_search).apply {
             // use a linear layout manager
             layoutManager = LinearLayoutManager(this.context)
             // specify an viewAdapter
@@ -73,11 +73,10 @@ class SearchFragment : Fragment() {
 
     private fun subscribeToWhenSearchIsInvoked() {
         val disposable: Disposable = sharedViewModel.searchQueryPublishSubject
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy (
                 onNext = {
-                    this.activity?.runOnUiThread {
-                        searchViewModel.setVisibilityDuringSearch()
-                    }
+                    searchViewModel.setVisibilityDuringSearch()
                 },
                 onError = {
                     Log.e("SearchFragment", "subscribe to when search is invoked failed, $it")
