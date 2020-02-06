@@ -1,4 +1,4 @@
-package com.jonathanl.bgmanager.ui.search.recyclerview
+package com.jonathanl.bgmanager.ui.search
 
 import android.view.View
 import androidx.cardview.widget.CardView

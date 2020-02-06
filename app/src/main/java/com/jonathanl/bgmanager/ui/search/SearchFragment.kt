@@ -15,7 +15,6 @@ import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.SharedViewModel
 import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
 import com.jonathanl.bgmanager.network.BoardGameSearchResults
-import com.jonathanl.bgmanager.ui.search.recyclerview.SearchViewAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

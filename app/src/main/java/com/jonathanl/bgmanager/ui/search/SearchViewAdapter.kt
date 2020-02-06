@@ -1,8 +1,10 @@
-package com.jonathanl.bgmanager.ui.search.recyclerview
+package com.jonathanl.bgmanager.ui.search
 
 import android.app.Activity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
@@ -27,21 +29,6 @@ class SearchViewAdapter:
         }
     }
 
-    // Create new views (by layout manager)
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
-        // create a new view
-        val cardView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_search_view, parent, false) as CardView
-        // set the view's size, margins, paddings and layout parameters
-        return SearchViewHolder(cardView)
-
-    }
-
-    // Replace contents of view (by layout manager)
-    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        // - bind the result to the view
-        holder.bind(getItem(position))
-    }
-
     // ViewHolder for each data item
     class SearchViewHolder(val cardView: CardView): RecyclerView.ViewHolder(cardView){
         internal fun bind(boardGameResult: BoardGameResult){
@@ -52,6 +39,31 @@ class SearchViewAdapter:
                 search_result_game_id.text = boardGameResult.gameId
                 setOnClickListener(SearchViewOnClickListener())
             }
+        }
+    }
+
+    // Create new views (by layout manager)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
+        // create a new view
+        val cardView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_search_view, parent, false) as CardView
+        // set the view's size, margins, paddings and layout parameters
+        return SearchViewHolder(
+            cardView
+        )
+
+    }
+
+    // Replace contents of view (by layout manager)
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
+        // - bind the result to the view
+        holder.bind(getItem(position))
+        setAppearAnimation(holder.itemView)
+    }
+
+    private fun setAppearAnimation(viewToAnimate: View) {
+        if (viewToAnimate.animation == null) {
+            val animation = AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.fade_in)
+            viewToAnimate.animation = animation
         }
     }
 

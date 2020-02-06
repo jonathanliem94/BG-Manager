@@ -8,11 +8,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
-import com.jonathanl.bgmanager.ui.gamelist.data.GameListEntry
-import com.jonathanl.bgmanager.ui.gamelist.recyclerview.GameListViewAdapter
 
 class GameListFragment : Fragment() {
 
@@ -35,16 +34,26 @@ class GameListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val gameListAdapter = GameListViewAdapter()
         recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_game_list).apply {
             // use a linear layout manager
             layoutManager = LinearLayoutManager(this.context)
             // specify an viewAdapter
-            adapter = GameListViewAdapter()
+            adapter = gameListAdapter
         }
+
+        // Attach gesture functionality (swipe and drag and drop) to recycler view
+        val gestureCallback = GameListGestureCallback(gameListAdapter)
+        val gestureHelper = ItemTouchHelper(gestureCallback)
+        gestureHelper.attachToRecyclerView(recyclerView)
 
         // test input
         (recyclerView.adapter as GameListViewAdapter).submitList(
-            listOf(GameListEntry("Gloomhaven", "123"),
-                GameListEntry("Catan", "456")))
+            mutableListOf(
+                GameListEntry("Gloomhaven", "123"),
+                GameListEntry("Catan", "456"),
+                GameListEntry("Pandemic", "789")
+            )
+        )
     }
 }
