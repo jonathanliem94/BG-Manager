@@ -32,17 +32,19 @@ class SharedViewModel: ViewModel() {
         disposable = searchQueryPublishSubject
             .filter{it.isNotBlank()}
             .debounce(1, TimeUnit.SECONDS)
-            .subscribeBy {
-                query -> repository.makeBoardGameSearch(query)
-                    .subscribeOn(Schedulers.io())
-                    .subscribeBy (
-                        onNext = { searchResults.onNext(it)},
-                        onError = {
-                            Log.e("SharedViewModel", "subscribeToSearchQueryPublishSubject failed. $it")
-                        }
-                    )
+            .switchMap { query ->
+                repository.makeBoardGameSearch(query)
             }
+            .subscribeOn(Schedulers.io())
+            .subscribeBy (
+                onNext = { searchResults.onNext(it)},
+                onError = {
+                    Log.e("SharedViewModel", "subscribeToSearchQueryPublishSubject failed. $it")
+                }
+            )
+
     }
+
 
     override fun onCleared() {
         disposable.dispose()

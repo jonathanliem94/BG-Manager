@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/reorder_image"
+            android:id="@+id/reorderImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             card_view:layout_constraintBottom_toBottomOf="parent"
@@ -24,19 +24,19 @@
             card_view:srcCompat="@drawable/ic_drag_indicator" />
 
         <TextView
-            android:id="@+id/game_list_entry_text"
+            android:id="@+id/gameListEntryText"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:text="@string/search_name_not_found"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintEnd_toStartOf="@+id/edit_entry_image"
+            card_view:layout_constraintEnd_toStartOf="@+id/editEntryImage"
             card_view:layout_constraintHorizontal_bias="0.0"
-            card_view:layout_constraintStart_toEndOf="@+id/reorder_image"
+            card_view:layout_constraintStart_toEndOf="@+id/reorderImage"
             card_view:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/edit_entry_image"
+            android:id="@+id/editEntryImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             card_view:layout_constraintBottom_toBottomOf="parent"
