@@ -15,7 +15,6 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.SearchView
 import androidx.activity.viewModels
-import androidx.navigation.fragment.NavHostFragment
 
 class MainActivity : AppCompatActivity() {
 
