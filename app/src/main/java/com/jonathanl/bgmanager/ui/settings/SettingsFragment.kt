@@ -21,7 +21,7 @@ class SettingsFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_share, container, false)
         val textView: TextView = root.findViewById(R.id.text_share)
-        settingsViewModel.text.observe(this, Observer {
+        settingsViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

@@ -28,7 +28,7 @@ class GameListViewAdapter(private val gameListDragListener: GameListDragListener
     }
 
     // ViewHolder for each data item
-    class GameListViewHolder(val cardView: CardView): RecyclerView.ViewHolder(cardView){
+    class GameListViewHolder(private val cardView: CardView): RecyclerView.ViewHolder(cardView){
         internal fun bind(gameListEntry: GameListEntry, gameListDragListener: GameListDragListener){
             cardView.apply {
                 gameListEntryText.text = gameListEntry.gameName.plus(gameListEntry.gameId)
@@ -51,7 +51,7 @@ class GameListViewAdapter(private val gameListDragListener: GameListDragListener
 
     override fun submitList(list: MutableList<GameListEntry>?) {
         super.submitList(list)
-        entryList = list ?: mutableListOf<GameListEntry>()
+        entryList = list ?: mutableListOf()
     }
 
     // Replace contents of view (by layout manager)

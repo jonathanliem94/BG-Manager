@@ -24,7 +24,7 @@ class GameListFragment : Fragment(), GameListDragListener {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_game_list, container, false)
         val textView: TextView = root.findViewById(R.id.text_gamelist)
-        gameListViewModel.text.observe(this, Observer {
+        gameListViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

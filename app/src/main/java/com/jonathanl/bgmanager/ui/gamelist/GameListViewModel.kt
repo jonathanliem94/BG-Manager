@@ -1,6 +1,5 @@
 package com.jonathanl.bgmanager.ui.gamelist
 
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

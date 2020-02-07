@@ -22,7 +22,7 @@ class SharedViewModel: ViewModel() {
     // Behaviour subject, so that the old results will still be there when navigating between other parts of the app
     var searchResults: BehaviorSubject<BoardGameSearchResults> = BehaviorSubject.create()
     // Disposable
-    lateinit var disposable: Disposable
+    private lateinit var disposable: Disposable
 
     init {
         subscribeToSearchQueryPublishSubject()

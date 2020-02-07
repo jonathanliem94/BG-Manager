@@ -30,7 +30,7 @@ class SearchViewAdapter:
     }
 
     // ViewHolder for each data item
-    class SearchViewHolder(val cardView: CardView): RecyclerView.ViewHolder(cardView){
+    class SearchViewHolder(private val cardView: CardView): RecyclerView.ViewHolder(cardView){
         internal fun bind(boardGameResult: BoardGameResult){
             val activity = cardView.context as Activity
             cardView.apply {

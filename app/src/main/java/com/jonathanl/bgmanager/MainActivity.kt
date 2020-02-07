@@ -2,7 +2,6 @@ package com.jonathanl.bgmanager
 
 import android.app.SearchManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -16,6 +15,7 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.SearchView
 import androidx.activity.viewModels
+import androidx.navigation.fragment.NavHostFragment
 
 class MainActivity : AppCompatActivity() {
 
