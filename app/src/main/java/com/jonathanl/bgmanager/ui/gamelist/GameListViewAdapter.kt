@@ -60,16 +60,10 @@ class GameListViewAdapter(private val gameListDragListener: GameListDragListener
         holder.bind(getItem(position), gameListDragListener)
     }
 
-    fun insertEntryOnDrag(itemPosToBeInserted: Int, itemPosHoveredOver: Int){
-        var itemBeingDraggedIndex = itemPosToBeInserted
-        var itemBeingShiftedIndex = itemPosHoveredOver
-        if (itemPosToBeInserted < 0) itemBeingDraggedIndex = 0
-        if (itemPosHoveredOver > entryList.size-1) itemBeingShiftedIndex = (entryList.size-1)
-
-        val entryToBeShifted = entryList.removeAt(itemBeingDraggedIndex)
-        notifyItemRemoved(itemBeingDraggedIndex)
-        entryList.add(itemBeingShiftedIndex, entryToBeShifted)
-        notifyItemInserted(itemBeingShiftedIndex)
+    fun insertEntryOnDrag(itemFromPos: Int, itemToPos: Int){
+        val entryToBeShifted = entryList.removeAt(itemFromPos)
+        entryList.add(itemToPos, entryToBeShifted)
+        notifyItemMoved(itemFromPos, itemToPos)
     }
 
     fun removeEntryOnSwipe(position: Int){

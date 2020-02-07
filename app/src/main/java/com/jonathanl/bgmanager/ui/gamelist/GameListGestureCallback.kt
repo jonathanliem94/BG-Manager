@@ -1,5 +1,6 @@
 package com.jonathanl.bgmanager.ui.gamelist
 
+import android.graphics.Color
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,21 @@ class GameListGestureCallback(private val adapter: GameListViewAdapter) : ItemTo
 
     override fun isLongPressDragEnabled(): Boolean {
         return false
+    }
+
+    // when bring dragged or swiped, the background color of the view turns to LTGREY
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        if (actionState != ACTION_STATE_IDLE){
+            viewHolder?.itemView?.setBackgroundColor(Color.LTGRAY)
+        }
+
+        super.onSelectedChanged(viewHolder, actionState)
+    }
+
+    // when an item is dropped, or swipe cancelled, the color is reset
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+        viewHolder.itemView.setBackgroundColor(Color.WHITE)
     }
 
 }

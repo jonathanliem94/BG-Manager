@@ -1,6 +1,7 @@
 package com.jonathanl.bgmanager
 
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import com.jonathanl.bgmanager.network.BoardGameSearchResults
 import com.jonathanl.bgmanager.repository.Repository
@@ -44,7 +45,6 @@ class SharedViewModel: ViewModel() {
             )
 
     }
-
 
     override fun onCleared() {
         disposable.dispose()
