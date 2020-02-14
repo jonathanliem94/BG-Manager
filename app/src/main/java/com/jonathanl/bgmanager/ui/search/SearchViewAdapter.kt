@@ -11,10 +11,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
+import com.jonathanl.bgmanager.SharedViewModel
 import com.jonathanl.bgmanager.network.BoardGameResult
 import kotlinx.android.synthetic.main.recycler_search_view.view.*
 
-class SearchViewAdapter:
+class SearchViewAdapter(private val sharedViewModel: SharedViewModel):
     ListAdapter<BoardGameResult, SearchViewAdapter.SearchViewHolder>(BoardGameResultDiffCallback()) {
 
     // Provide itemcallback to allow DiffUtil to determine what is different from the old and new items
@@ -31,13 +32,14 @@ class SearchViewAdapter:
 
     // ViewHolder for each data item
     class SearchViewHolder(private val cardView: CardView): RecyclerView.ViewHolder(cardView){
-        internal fun bind(boardGameResult: BoardGameResult){
+        internal fun bind(boardGameResult: BoardGameResult, sharedViewModel: SharedViewModel){
             val activity = cardView.context as Activity
             cardView.apply {
                 search_result_image.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_launcher_background))
                 search_result_text.text = boardGameResult.boardGameNameResult.gameName
                 search_result_game_id.text = boardGameResult.gameId
-                setOnClickListener(SearchViewOnClickListener())
+                search_result_gotodetails_img.setOnClickListener(SearchViewOnClickMoreDetails())
+                search_result_addtogamelist_img.setOnClickListener(SearchViewOnClickAddToGameList(sharedViewModel))
             }
         }
     }
@@ -47,16 +49,13 @@ class SearchViewAdapter:
         // create a new view
         val cardView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_search_view, parent, false) as CardView
         // set the view's size, margins, paddings and layout parameters
-        return SearchViewHolder(
-            cardView
-        )
-
+        return SearchViewHolder(cardView)
     }
 
     // Replace contents of view (by layout manager)
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         // - bind the result to the view
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), sharedViewModel)
         setAppearAnimation(holder.itemView)
     }
 

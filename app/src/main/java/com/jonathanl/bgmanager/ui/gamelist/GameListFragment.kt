@@ -1,21 +1,29 @@
 package com.jonathanl.bgmanager.ui.gamelist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
+import com.jonathanl.bgmanager.SharedViewModel
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 
 class GameListFragment : Fragment(), GameListDragListener {
 
     private val gameListViewModel: GameListViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var itemTouchHelper: ItemTouchHelper
+    private lateinit var disposable: Disposable
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,18 +53,27 @@ class GameListFragment : Fragment(), GameListDragListener {
         }
         // Attach gesture functionality (swipe and drag and drop) to recycler view
         itemTouchHelper.attachToRecyclerView(recyclerView)
-
-        // test input
-        (recyclerView.adapter as GameListViewAdapter).submitList(
-            mutableListOf(
-                GameListEntry("Gloomhaven", "123"),
-                GameListEntry("Catan", "456"),
-                GameListEntry("Pandemic", "789")
-            )
-        )
+        subscribeToGameListObservable()
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
+    }
+
+    private fun subscribeToGameListObservable(){
+        disposable = sharedViewModel.gameListHolder
+            .distinctUntilChanged()
+            .subscribeOn(Schedulers.io())
+            .subscribeBy (
+                onNext = {(recyclerView.adapter as GameListViewAdapter).submitList(it)},
+                onError = {
+                    Log.e("GameListFragment", "subscribeToGameListObservable failed. $it")
+                }
+            )
+    }
+
+    override fun onDestroyView() {
+        disposable.dispose()
+        super.onDestroyView()
     }
 }

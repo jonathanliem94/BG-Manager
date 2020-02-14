@@ -1,18 +1,49 @@
 package com.jonathanl.bgmanager.ui.search
 
 import android.view.View
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.navigation.findNavController
+import com.jonathanl.bgmanager.SharedViewModel
+import com.jonathanl.bgmanager.ui.gamelist.GameListEntry
 import kotlinx.android.synthetic.main.recycler_search_view.view.*
 
-class SearchViewOnClickListener: View.OnClickListener{
-    override fun onClick(v: View?) {
-        if (v == null) return
-        val cardView = (v as CardView)
-        val gameName = cardView.search_result_text.text.toString()
-        val gameId = cardView.search_result_game_id.text.toString()
-        val action = SearchFragmentDirections.actionNavSearchToNavGameDetails(gameName,gameId)
-        cardView.findNavController().navigate(action)
-    }
+interface SearchViewOnClickListener: View.OnClickListener
 
+class SearchViewOnClickMoreDetails: SearchViewOnClickListener{
+    override fun onClick(v: View?) {
+        val toast = Toast.makeText(v?.context, "Navigating to game details", Toast.LENGTH_SHORT)
+        toast.show()
+        when {
+            v == null -> {
+                return
+            }
+            v.parent.parent is CardView -> {
+                (v.parent.parent as CardView).apply {
+                    val gameName = search_result_text.text.toString()
+                    val gameId = search_result_game_id.text.toString()
+                    val action = SearchFragmentDirections.actionNavSearchToNavGameDetails(gameName,gameId)
+                    findNavController().navigate(action)
+                }
+            }
+        }
+    }
+}
+
+class SearchViewOnClickAddToGameList(private val sharedViewModel: SharedViewModel): SearchViewOnClickListener{
+    override fun onClick(v: View?) {
+        val toast = Toast.makeText(v?.context, "Added to game list", Toast.LENGTH_SHORT)
+        toast.show()
+        when {
+            v == null -> {
+                return
+            }
+            v.parent.parent is CardView -> {
+                (v.parent.parent as CardView).apply {
+                    val newGameListEntry = GameListEntry(search_result_text.text.toString(), search_result_game_id.text.toString())
+                    sharedViewModel.newGameListEntryHolder.onNext(newGameListEntry)
+                }
+            }
+        }
+    }
 }

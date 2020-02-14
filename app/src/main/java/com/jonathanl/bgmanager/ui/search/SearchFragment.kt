@@ -47,7 +47,7 @@ class SearchFragment : Fragment() {
             // use a linear layout manager
             layoutManager = LinearLayoutManager(this.context)
             // specify an viewAdapter
-            adapter = SearchViewAdapter()
+            adapter = SearchViewAdapter(sharedViewModel)
         }
 
         // Subscribe to search results in sharedviewmodel
