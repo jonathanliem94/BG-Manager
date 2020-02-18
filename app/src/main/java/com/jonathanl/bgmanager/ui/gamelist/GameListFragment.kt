@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.MainComponentInjector
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.SharedViewModel
-import com.jonathanl.bgmanager.di.MainActivityComponent
+import com.jonathanl.bgmanager.di.DaggerGameListComponent
+import com.jonathanl.bgmanager.di.GameListComponent
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -21,12 +21,15 @@ import javax.inject.Inject
 
 class GameListFragment : Fragment(), GameListDragListener {
 
-    private val gameListViewModel: GameListViewModel by viewModels()
-
+    @Inject
+    lateinit var gameListViewModel: GameListViewModel
     @Inject
     lateinit var sharedViewModel: SharedViewModel
 
-    private lateinit var component: MainActivityComponent
+    private val component: GameListComponent =
+        DaggerGameListComponent.builder()
+            .mainActivityComponent(MainComponentInjector.mainActivityComponent)
+            .build()
     private lateinit var recyclerView: RecyclerView
     private lateinit var itemTouchHelper: ItemTouchHelper
     private lateinit var disposable: Disposable
@@ -36,7 +39,6 @@ class GameListFragment : Fragment(), GameListDragListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        component = MainComponentInjector.mainActivityComponent
         component.inject(this)
         val root = inflater.inflate(R.layout.fragment_game_list, container, false)
         val textView: TextView = root.findViewById(R.id.text_gamelist)

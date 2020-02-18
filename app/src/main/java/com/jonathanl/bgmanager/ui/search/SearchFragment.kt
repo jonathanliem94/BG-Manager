@@ -7,15 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jonathanl.bgmanager.MainActivity
 import com.jonathanl.bgmanager.MainComponentInjector
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.SharedViewModel
 import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
-import com.jonathanl.bgmanager.di.MainActivityComponent
+import com.jonathanl.bgmanager.di.DaggerSearchComponent
+import com.jonathanl.bgmanager.di.SearchComponent
 import com.jonathanl.bgmanager.network.BoardGameSearchResults
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -26,13 +25,16 @@ import javax.inject.Inject
 
 class SearchFragment : Fragment() {
 
-    private val searchViewModel: SearchViewModel by viewModels()
-
+    @Inject
+    lateinit var searchViewModel: SearchViewModel
     @Inject
     lateinit var sharedViewModel: SharedViewModel
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var component: MainActivityComponent
+    private val component: SearchComponent =
+        DaggerSearchComponent.builder()
+            .mainActivityComponent(MainComponentInjector.mainActivityComponent)
+            .build()
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     override fun onCreateView(
@@ -40,7 +42,6 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        component = MainComponentInjector.mainActivityComponent
         component.inject(this)
         //Databinding, inflating the view, and setting the viewmodel
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)

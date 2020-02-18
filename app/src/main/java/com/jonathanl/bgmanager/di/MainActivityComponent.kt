@@ -3,8 +3,6 @@ package com.jonathanl.bgmanager.di
 import com.jonathanl.bgmanager.MainActivity
 import com.jonathanl.bgmanager.SharedViewModel
 import com.jonathanl.bgmanager.repository.Repository
-import com.jonathanl.bgmanager.ui.gamelist.GameListFragment
-import com.jonathanl.bgmanager.ui.search.SearchFragment
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -17,8 +15,9 @@ interface MainActivityComponent {
 
     // Dagger has to provide dependencies for these
     fun inject(mainActivity: MainActivity)
-    fun inject(searchFragment: SearchFragment)
-    fun inject(gameListFragment: GameListFragment)
+
+    // Make SharedViewModel visible for other components depending on this
+    fun provideSharedViewModel(): SharedViewModel
 
     /* No need for builder for now, as the component has no dependencies
     @Component.Builder
