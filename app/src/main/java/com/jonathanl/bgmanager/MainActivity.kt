@@ -14,17 +14,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.SearchView
-import androidx.activity.viewModels
+import com.jonathanl.bgmanager.di.DaggerMainActivityComponent
+import com.jonathanl.bgmanager.di.MainActivityComponent
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private val sharedViewModel: SharedViewModel by viewModels()
+    private lateinit var component: MainActivityComponent
+
+    @Inject
+    lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
+        // Create the main component
+        MainComponentInjector.mainActivityComponent = DaggerMainActivityComponent.create()
+        component = MainComponentInjector.mainActivityComponent
+        component.inject(this)
+
+        setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -70,7 +80,6 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
-
         return true
     }
 
@@ -79,7 +88,4 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-
-
 }
-

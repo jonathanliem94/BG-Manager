@@ -20,10 +20,14 @@
 - GameList Fragment
     - ViewModel uses `LiveData`
 
+- Shared View Model
+    - Handles searchResults and game list through `BehaviourSubject` and `PublishSubject`
+
 ## Important Dependencies
 
 - Native Navigation component for navigation
 - RxJava/Kotlin/Android for reactive programming
+- Dagger2 for Dependency Injection
 - Retrofit2 for network calls
 - Espresso for UI tests
 - Mockito-Kotlin for Unit tests

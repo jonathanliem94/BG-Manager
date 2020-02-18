@@ -1,39 +1,41 @@
 package com.jonathanl.bgmanager
 
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import com.jonathanl.bgmanager.network.BoardGameSearchResults
 import com.jonathanl.bgmanager.repository.Repository
 import com.jonathanl.bgmanager.ui.gamelist.GameListEntry
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
-class SharedViewModel: ViewModel() {
+class SharedViewModel(
+    private val repository: Repository
+): ViewModel() {
 
-    private val repository: Repository by lazy {
-        Repository()
-    }
-    // Search Query Observable
-    val searchQueryPublishSubject: PublishSubject<String> = PublishSubject.create()
     // Search Results
     // Behaviour subject, so that the old results will still be there when navigating between other parts of the app
-    val searchResults: BehaviorSubject<BoardGameSearchResults> = BehaviorSubject.create()
+    private val searchResultsBehavior: BehaviorSubject<BoardGameSearchResults> = BehaviorSubject.create()
+    val searchResults = searchResultsBehavior.hide()
     // Game List Observable
-    val gameListHolder: BehaviorSubject<MutableList<GameListEntry>> = BehaviorSubject.create()
+    private val gameListBehavior: BehaviorSubject<MutableList<GameListEntry>> = BehaviorSubject.create()
+    val gameListHolder = gameListBehavior.hide()
+
     // New entry to be added to GameList observable
     val newGameListEntryHolder: PublishSubject<GameListEntry> = PublishSubject.create()
+    // Search Query Observable
+    val searchQueryPublishSubject: PublishSubject<String> = PublishSubject.create()
+
     // composite disposable
     val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     init {
         subscribeToSearchQueryPublishSubject()
         subscribeToNewGameListEntryHolder()
-
     }
 
     private fun subscribeToSearchQueryPublishSubject(){
@@ -46,7 +48,7 @@ class SharedViewModel: ViewModel() {
             .subscribeOn(Schedulers.io())
             .subscribeBy (
                 onNext = {
-                    searchResults.onNext(it)
+                    searchResultsBehavior.onNext(it)
                 },
                 onError = {
                     Log.e("SharedViewModel", "subscribeToSearchQueryPublishSubject failed. $it")
@@ -69,13 +71,13 @@ class SharedViewModel: ViewModel() {
     }
 
     private fun addNewGameEntry(newGameListEntry: GameListEntry){
-        val gameList = gameListHolder.value ?: mutableListOf()
+        val gameList = gameListBehavior.value ?: mutableListOf()
         if (gameList.contains(newGameListEntry)) {
             return
         }
         else{
             gameList.add(newGameListEntry)
-            gameListHolder.onNext(gameList)
+            gameListBehavior.onNext(gameList)
         }
     }
 
