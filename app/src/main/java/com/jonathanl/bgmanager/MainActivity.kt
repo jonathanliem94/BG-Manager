@@ -10,18 +10,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.SearchView
-import com.jonathanl.bgmanager.di.DaggerMainActivityComponent
-import com.jonathanl.bgmanager.di.MainActivityComponent
+import com.jonathanl.bgmanager.base.BaseActivity
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var component: MainActivityComponent
 
     @Inject
     lateinit var sharedViewModel: SharedViewModel
@@ -29,11 +26,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Create the main component
-        MainComponentInjector.mainActivityComponent = DaggerMainActivityComponent.create()
-        component = MainComponentInjector.mainActivityComponent
-        component.inject(this)
-
+        setUpDI()
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -86,6 +79,10 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun setUpDI() {
+        getMainActivityComponent().inject(this)
     }
 
 }

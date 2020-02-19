@@ -6,15 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jonathanl.bgmanager.MainComponentInjector
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.SharedViewModel
 import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
 import com.jonathanl.bgmanager.di.DaggerSearchComponent
-import com.jonathanl.bgmanager.di.SearchComponent
+import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.network.BoardGameSearchResults
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -23,7 +21,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SearchFragment : Fragment() {
+class SearchFragment : BaseFragment() {
 
     @Inject
     lateinit var searchViewModel: SearchViewModel
@@ -31,10 +29,6 @@ class SearchFragment : Fragment() {
     lateinit var sharedViewModel: SharedViewModel
 
     private lateinit var recyclerView: RecyclerView
-    private val component: SearchComponent =
-        DaggerSearchComponent.builder()
-            .mainActivityComponent(MainComponentInjector.mainActivityComponent)
-            .build()
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     override fun onCreateView(
@@ -42,7 +36,7 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        component.inject(this)
+        setUpDI()
         //Databinding, inflating the view, and setting the viewmodel
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         binding.viewmodel = searchViewModel
@@ -101,6 +95,13 @@ class SearchFragment : Fragment() {
             (recyclerView.adapter as SearchViewAdapter).submitList(results.resultsArray)
             searchViewModel.setVisibilityAfterSearchWithResults()
         }
+    }
+
+    private fun setUpDI() {
+        DaggerSearchComponent.builder()
+            .mainActivityComponent(getMainActivityComponent())
+            .build()
+            .inject(this)
     }
 
     override fun onDestroyView() {
