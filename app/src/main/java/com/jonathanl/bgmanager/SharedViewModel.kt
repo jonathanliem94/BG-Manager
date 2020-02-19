@@ -1,12 +1,12 @@
 package com.jonathanl.bgmanager
 
 import android.util.Log
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import com.jonathanl.bgmanager.network.BoardGameSearchResults
 import com.jonathanl.bgmanager.repository.Repository
 import com.jonathanl.bgmanager.ui.gamelist.GameListEntry
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -34,12 +34,14 @@ class SharedViewModel(
     val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     init {
-        subscribeToSearchQueryPublishSubject()
-        subscribeToNewGameListEntryHolder()
+        compositeDisposable.addAll(
+            subscribeToSearchQueryPublishSubject(),
+            subscribeToNewGameListEntryHolder()
+        )
     }
 
-    private fun subscribeToSearchQueryPublishSubject(){
-        val disposable = searchQueryPublishSubject
+    private fun subscribeToSearchQueryPublishSubject(): Disposable {
+        return searchQueryPublishSubject
             .filter{it.isNotBlank()}
             .debounce(1, TimeUnit.SECONDS)
             .switchMap { query ->
@@ -54,11 +56,10 @@ class SharedViewModel(
                     Log.e("SharedViewModel", "subscribeToSearchQueryPublishSubject failed. $it")
                 }
             )
-        compositeDisposable.add(disposable)
     }
 
-    private fun subscribeToNewGameListEntryHolder(){
-        val disposable = newGameListEntryHolder
+    private fun subscribeToNewGameListEntryHolder(): Disposable {
+        return newGameListEntryHolder
             .subscribeBy (
                 onNext = {
                     addNewGameEntry(it)
@@ -67,10 +68,9 @@ class SharedViewModel(
                     Log.e("SharedViewModel", "subscribeToNewGameListEntryHolder failed. $it")
                 }
             )
-        compositeDisposable.add(disposable)
     }
 
-    private fun addNewGameEntry(newGameListEntry: GameListEntry){
+    private fun addNewGameEntry(newGameListEntry: GameListEntry) {
         val gameList = gameListBehavior.value ?: mutableListOf()
         if (gameList.contains(newGameListEntry)) {
             return
