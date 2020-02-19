@@ -1,3 +1,5 @@
+![CI](https://github.com/jonathanliem94/BG-Manager/workflows/CI/badge.svg?branch=master)
+
 ## Use Case
 
 - Allow users to search board games on BGG
