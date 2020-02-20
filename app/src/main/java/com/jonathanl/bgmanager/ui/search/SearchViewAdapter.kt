@@ -11,11 +11,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
-import com.jonathanl.bgmanager.SharedViewModel
 import com.jonathanl.bgmanager.network.BoardGameResult
 import kotlinx.android.synthetic.main.recycler_search_view.view.*
 
-class SearchViewAdapter(private val sharedViewModel: SharedViewModel):
+class SearchViewAdapter(private val searchViewModel: SearchViewModel):
     ListAdapter<BoardGameResult, SearchViewAdapter.SearchViewHolder>(BoardGameResultDiffCallback()) {
 
     // Provide itemcallback to allow DiffUtil to determine what is different from the old and new items
@@ -32,14 +31,14 @@ class SearchViewAdapter(private val sharedViewModel: SharedViewModel):
 
     // ViewHolder for each data item
     class SearchViewHolder(private val cardView: CardView): RecyclerView.ViewHolder(cardView){
-        internal fun bind(boardGameResult: BoardGameResult, sharedViewModel: SharedViewModel){
+        internal fun bind(boardGameResult: BoardGameResult, searchViewModel: SearchViewModel){
             val activity = cardView.context as Activity
             cardView.apply {
                 search_result_image.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_launcher_background))
                 search_result_text.text = boardGameResult.boardGameNameResult.gameName
                 search_result_game_id.text = boardGameResult.gameId
                 search_result_gotodetails_img.setOnClickListener(SearchViewOnClickMoreDetails())
-                search_result_addtogamelist_img.setOnClickListener(SearchViewOnClickAddToGameList(sharedViewModel))
+                search_result_addtogamelist_img.setOnClickListener(SearchViewOnClickAddToGameList(searchViewModel))
             }
         }
     }
@@ -55,7 +54,7 @@ class SearchViewAdapter(private val sharedViewModel: SharedViewModel):
     // Replace contents of view (by layout manager)
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         // - bind the result to the view
-        holder.bind(getItem(position), sharedViewModel)
+        holder.bind(getItem(position), searchViewModel)
         setAppearAnimation(holder.itemView)
     }
 

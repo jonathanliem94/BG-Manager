@@ -1,8 +1,11 @@
 package com.jonathanl.bgmanager.di
 
 import com.jonathanl.bgmanager.MainActivity
-import com.jonathanl.bgmanager.SharedViewModel
-import com.jonathanl.bgmanager.repository.Repository
+import com.jonathanl.bgmanager.network.NetworkService
+import com.jonathanl.bgmanager.useCases.GameListUseCase
+import com.jonathanl.bgmanager.useCases.GameListUseCaseImpl
+import com.jonathanl.bgmanager.useCases.NetworkUseCase
+import com.jonathanl.bgmanager.useCases.NetworkUseCaseImpl
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -17,7 +20,8 @@ interface MainActivityComponent {
     fun inject(mainActivity: MainActivity)
 
     // Make SharedViewModel visible for other components depending on this
-    fun provideSharedViewModel(): SharedViewModel
+    fun provideNetworkUseCase(): NetworkUseCase
+    fun provideGameListUseCase(): GameListUseCase
 
     /* No need for builder for now, as the component has no dependencies
     @Component.Builder
@@ -32,12 +36,17 @@ object MainActivityModule {
 
     @Provides
     @ActivityScope
-    fun provideRepository(): Repository =
-        Repository()
+    fun provideNetworkService(): NetworkService =
+        NetworkService.createNetworkService()
 
     @Provides
     @ActivityScope
-    fun provideSharedViewModel(repository: Repository): SharedViewModel =
-        SharedViewModel(repository)
+    fun provideGameListUseCase(): GameListUseCase =
+        GameListUseCaseImpl()
+
+    @Provides
+    @ActivityScope
+    fun provideNetworkUseCase(networkService: NetworkService): NetworkUseCase =
+        NetworkUseCaseImpl(networkService)
 
 }

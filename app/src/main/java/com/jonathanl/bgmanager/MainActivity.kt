@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.SearchView
 import com.jonathanl.bgmanager.base.BaseActivity
+import com.jonathanl.bgmanager.useCases.NetworkUseCase
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -21,7 +22,7 @@ class MainActivity : BaseActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     @Inject
-    lateinit var sharedViewModel: SharedViewModel
+    lateinit var networkUseCase: NetworkUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +66,7 @@ class MainActivity : BaseActivity() {
 
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     if (query != null) {
-                        sharedViewModel.searchQueryPublishSubject.onNext(query)
+                        networkUseCase.onSubmitSearchQuery(query)
                         //ensure focus on search bar is lost after a search
                         this@apply.onActionViewCollapsed()
                     }

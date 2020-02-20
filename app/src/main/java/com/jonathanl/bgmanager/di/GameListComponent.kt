@@ -2,6 +2,7 @@ package com.jonathanl.bgmanager.di
 
 import com.jonathanl.bgmanager.ui.gamelist.GameListFragment
 import com.jonathanl.bgmanager.ui.gamelist.GameListViewModel
+import com.jonathanl.bgmanager.useCases.GameListUseCase
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -22,7 +23,7 @@ object GameListModule {
 
     @Provides
     @FragmentScope
-    fun provideGameListViewModel(): GameListViewModel =
-        GameListViewModel()
+    fun provideGameListViewModel(gameListUseCase: GameListUseCase): GameListViewModel =
+        GameListViewModel(gameListUseCase)
 
 }

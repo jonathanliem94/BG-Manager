@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
-import com.jonathanl.bgmanager.SharedViewModel
 import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
 import com.jonathanl.bgmanager.di.DaggerSearchComponent
 import com.jonathanl.bgmanager.base.BaseFragment
@@ -25,8 +24,6 @@ class SearchFragment : BaseFragment() {
 
     @Inject
     lateinit var searchViewModel: SearchViewModel
-    @Inject
-    lateinit var sharedViewModel: SharedViewModel
 
     private lateinit var recyclerView: RecyclerView
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
@@ -51,16 +48,15 @@ class SearchFragment : BaseFragment() {
             // use a linear layout manager
             layoutManager = LinearLayoutManager(this.context)
             // specify an viewAdapter
-            adapter = SearchViewAdapter(sharedViewModel)
+            adapter = SearchViewAdapter(searchViewModel)
         }
 
         // Subscribe to search results in sharedviewmodel
-        subscribeToSearchResults()
-        subscribeToWhenSearchIsInvoked()
+        compositeDisposable.add(subscribeToSearchResults())
     }
 
-    private fun subscribeToSearchResults() {
-        val disposable: Disposable = sharedViewModel.searchResults
+    private fun subscribeToSearchResults(): Disposable {
+        return searchViewModel.boardGameSearchResults
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy (
@@ -71,29 +67,11 @@ class SearchFragment : BaseFragment() {
                     Log.e("SearchFragment", "subscribe to search results failed, $it")
                 }
             )
-        compositeDisposable.add(disposable)
-    }
-
-    private fun subscribeToWhenSearchIsInvoked() {
-        val disposable: Disposable = sharedViewModel.searchQueryPublishSubject
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy (
-                onNext = {
-                    searchViewModel.setVisibilityDuringSearch()
-                },
-                onError = {
-                    Log.e("SearchFragment", "subscribe to when search is invoked failed, $it")
-                }
-            )
-        compositeDisposable.add(disposable)
     }
 
     private fun handleSearchResults(results: BoardGameSearchResults) {
-        if (results.resultsArray.isNullOrEmpty()) {
-            searchViewModel.setVisibilityAfterSearchWithNoResults()
-        } else {
+        if ((results.resultsArray.isNullOrEmpty()).not()) {
             (recyclerView.adapter as SearchViewAdapter).submitList(results.resultsArray)
-            searchViewModel.setVisibilityAfterSearchWithResults()
         }
     }
 

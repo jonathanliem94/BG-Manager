@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.navigation.findNavController
-import com.jonathanl.bgmanager.SharedViewModel
 import com.jonathanl.bgmanager.ui.gamelist.GameListEntry
 import kotlinx.android.synthetic.main.recycler_search_view.view.*
 
@@ -30,7 +29,7 @@ class SearchViewOnClickMoreDetails: SearchViewOnClickListener{
     }
 }
 
-class SearchViewOnClickAddToGameList(private val sharedViewModel: SharedViewModel): SearchViewOnClickListener{
+class SearchViewOnClickAddToGameList(private val searchViewModel: SearchViewModel): SearchViewOnClickListener{
     override fun onClick(v: View?) {
         val toast = Toast.makeText(v?.context, "Added to game list", Toast.LENGTH_SHORT)
         toast.show()
@@ -41,7 +40,7 @@ class SearchViewOnClickAddToGameList(private val sharedViewModel: SharedViewMode
             v.parent.parent is CardView -> {
                 (v.parent.parent as CardView).apply {
                     val newGameListEntry = GameListEntry(search_result_text.text.toString(), search_result_game_id.text.toString())
-                    sharedViewModel.newGameListEntryHolder.onNext(newGameListEntry)
+                    searchViewModel.addNewEntryToGameList(newGameListEntry)
                 }
             }
         }
