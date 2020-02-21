@@ -1,4 +1,4 @@
-package com.jonathanl.bgmanager.ui.gamelist
+package com.jonathanl.bgmanager.ui.gamelist.models
 
 data class GameListEntry(
     var gameName: String,

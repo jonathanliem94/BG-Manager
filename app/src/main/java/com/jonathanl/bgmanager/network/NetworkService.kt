@@ -1,5 +1,7 @@
 package com.jonathanl.bgmanager.network
 
+import com.jonathanl.bgmanager.network.models.BoardGameInfo
+import com.jonathanl.bgmanager.network.models.BoardGameSearchResults
 import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

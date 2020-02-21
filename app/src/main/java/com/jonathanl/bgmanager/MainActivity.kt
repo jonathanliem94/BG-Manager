@@ -66,7 +66,7 @@ class MainActivity : BaseActivity() {
 
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     if (query != null) {
-                        networkUseCase.onSubmitSearchQuery(query)
+                        networkUseCase.onSubmitQueryForBoardGameSearch(query)
                         //ensure focus on search bar is lost after a search
                         this@apply.onActionViewCollapsed()
                     }

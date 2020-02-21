@@ -1,13 +1,11 @@
 package com.jonathanl.bgmanager.useCases
 
-import com.jonathanl.bgmanager.network.BoardGameName
-import com.jonathanl.bgmanager.network.BoardGameResult
-import com.jonathanl.bgmanager.network.BoardGameSearchResults
+import com.jonathanl.bgmanager.network.models.BoardGameName
+import com.jonathanl.bgmanager.network.models.BoardGameResult
+import com.jonathanl.bgmanager.network.models.BoardGameSearchResults
 import com.jonathanl.bgmanager.network.NetworkService
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Single
-import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
 class NetworkUseCaseTest {
@@ -16,28 +14,44 @@ class NetworkUseCaseTest {
     private val networkUseCaseUnderTest: NetworkUseCase = NetworkUseCaseImpl(networkService)
 
     private val testSearchQuery = "test"
-    private val fakeResult = BoardGameSearchResults(
-        total = "1",
-        termsofuse = "placeholder",
-        resultsArray = listOf(BoardGameResult(
-            "bg","123", BoardGameName("bg", "Panic!")
-        ))
-    )
-    private val noResult = BoardGameSearchResults(
-        total = "0",
-        termsofuse = "placeholder",
-        resultsArray = listOf()
-    )
+    private val fakeSearchResult =
+        BoardGameSearchResults(
+            total = "1",
+            resultsArray = listOf(
+                BoardGameResult(
+                    "123",
+                    BoardGameName(
+                        "Panic!"
+                    )
+                )
+            )
+        )
+    private val noSearchResult =
+        BoardGameSearchResults(
+            total = "0",
+            resultsArray = listOf()
+        )
+
+
 
     @Test
     fun `when the search query is blank, no search will be conducted`() {
         val emptySearchQuery  = ""
 
-        networkUseCaseUnderTest.onSubmitSearchQuery(emptySearchQuery)
+        networkUseCaseUnderTest.onSubmitQueryForBoardGameSearch(emptySearchQuery)
 
         verifyZeroInteractions(networkService)
         networkUseCaseUnderTest.searchStatus.test()
             .assertEmpty()
+    }
+
+    @Test
+    fun `when the game id is blank, call for details will not be conducted`() {
+        val emptyGameId  = ""
+
+        networkUseCaseUnderTest.onSubmitQueryForBoardGameDetails(emptyGameId)
+
+        verifyZeroInteractions(networkService)
     }
 
     @Test
@@ -46,7 +60,7 @@ class NetworkUseCaseTest {
             .thenReturn(Single.just(BoardGameSearchResults()))
         val testObservable = networkUseCaseUnderTest.searchStatus.test()
 
-        networkUseCaseUnderTest.onSubmitSearchQuery(testSearchQuery)
+        networkUseCaseUnderTest.onSubmitQueryForBoardGameSearch(testSearchQuery)
 
         testObservable.assertValue(SEARCH_START)
     }
@@ -54,24 +68,24 @@ class NetworkUseCaseTest {
     @Test
     fun `when search ends, search status is emitted correctly for zero results`() {
         whenever(networkService.getBoardGameSearchResults(testSearchQuery))
-            .thenReturn(Single.just(noResult))
+            .thenReturn(Single.just(noSearchResult))
 
-        networkUseCaseUnderTest.onSubmitSearchQuery(testSearchQuery)
+        networkUseCaseUnderTest.onSubmitQueryForBoardGameSearch(testSearchQuery)
 
         networkUseCaseUnderTest.boardGameSearchResults.test()
-            .assertValue{it == noResult}
+            .assertValue{it == noSearchResult}
 
     }
 
     @Test
     fun `when search ends, search status is emitted correctly for normal results`() {
         whenever(networkService.getBoardGameSearchResults(testSearchQuery))
-            .thenReturn(Single.just(fakeResult))
+            .thenReturn(Single.just(fakeSearchResult))
 
-        networkUseCaseUnderTest.onSubmitSearchQuery(testSearchQuery)
+        networkUseCaseUnderTest.onSubmitQueryForBoardGameSearch(testSearchQuery)
 
         networkUseCaseUnderTest.boardGameSearchResults.test()
-            .assertValue{it == fakeResult}
+            .assertValue{it == fakeSearchResult}
 
     }
 

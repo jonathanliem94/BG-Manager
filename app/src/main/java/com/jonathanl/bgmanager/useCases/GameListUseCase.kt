@@ -1,6 +1,6 @@
 package com.jonathanl.bgmanager.useCases
 
-import com.jonathanl.bgmanager.ui.gamelist.GameListEntry
+import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 

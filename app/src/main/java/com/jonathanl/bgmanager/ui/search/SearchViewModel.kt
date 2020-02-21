@@ -6,7 +6,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.ViewModel
-import com.jonathanl.bgmanager.ui.gamelist.GameListEntry
+import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
 import com.jonathanl.bgmanager.useCases.*
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy

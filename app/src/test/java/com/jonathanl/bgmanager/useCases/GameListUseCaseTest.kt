@@ -1,6 +1,6 @@
 package com.jonathanl.bgmanager.useCases
 
-import com.jonathanl.bgmanager.ui.gamelist.GameListEntry
+import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
 import org.junit.Test
 
 class GameListUseCaseTest {
@@ -9,7 +9,10 @@ class GameListUseCaseTest {
 
     @Test
     fun `when a duplicate game entry is inputted, the game list should not change`() {
-        val entry = GameListEntry("test", "123")
+        val entry = GameListEntry(
+            "test",
+            "123"
+        )
 
         repeat(2) {
             gameListUseCaseUnderTest.handleNewGameEntry(entry)
@@ -21,8 +24,14 @@ class GameListUseCaseTest {
 
     @Test
     fun `when a new game entry is inputted, the new game will be added to the game list`() {
-        val entry1 = GameListEntry("test", "123")
-        val entry2 = GameListEntry("hello", "456")
+        val entry1 = GameListEntry(
+            "test",
+            "123"
+        )
+        val entry2 = GameListEntry(
+            "hello",
+            "456"
+        )
 
         gameListUseCaseUnderTest.handleNewGameEntry(entry1)
         gameListUseCaseUnderTest.handleNewGameEntry(entry2)

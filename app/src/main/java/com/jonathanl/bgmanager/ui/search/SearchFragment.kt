@@ -12,7 +12,7 @@ import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
 import com.jonathanl.bgmanager.di.DaggerSearchComponent
 import com.jonathanl.bgmanager.base.BaseFragment
-import com.jonathanl.bgmanager.network.BoardGameSearchResults
+import com.jonathanl.bgmanager.network.models.BoardGameSearchResults
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

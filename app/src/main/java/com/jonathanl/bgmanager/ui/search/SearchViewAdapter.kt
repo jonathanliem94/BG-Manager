@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
-import com.jonathanl.bgmanager.network.BoardGameResult
+import com.jonathanl.bgmanager.network.models.BoardGameResult
 import kotlinx.android.synthetic.main.recycler_search_view.view.*
 
 class SearchViewAdapter(private val searchViewModel: SearchViewModel):

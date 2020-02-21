@@ -1,7 +1,7 @@
 package com.jonathanl.bgmanager
 
 import android.view.View
-import com.jonathanl.bgmanager.ui.gamelist.GameListEntry
+import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
 import com.jonathanl.bgmanager.ui.search.SearchViewModel
 import com.jonathanl.bgmanager.useCases.*
 import com.nhaarman.mockitokotlin2.mock
@@ -26,7 +26,11 @@ class SearchViewModelTest {
 
     @Test
     fun `when a gameEntry is to be added, the gameEntry will be passed on to the gameListUseCase`() {
-        val testGameListEntry = GameListEntry("test", "123")
+        val testGameListEntry =
+            GameListEntry(
+                "test",
+                "123"
+            )
         searchViewModelUnderTest.addNewEntryToGameList(testGameListEntry)
         verify(gameListUseCase).handleNewGameEntry(testGameListEntry)
     }
