@@ -18,7 +18,7 @@ class SearchViewModel(
 
     val text = ObservableField<String>("Let's start a search!")
     val textViewVisibility = ObservableInt(View.VISIBLE)
-    val progressBarVisibility = ObservableInt(View.GONE)
+    val progressBarVisibility = ObservableInt(View.INVISIBLE)
     val recyclerViewVisibility = ObservableInt(View.VISIBLE)
     val boardGameSearchResults = networkUseCase.boardGameSearchResults
     private val disposable: Disposable
@@ -63,7 +63,7 @@ class SearchViewModel(
     fun setVisibilityAfterSearchWithNoResults() {
         text.set("Oops, there seems to be no results!")
         textViewVisibility.set(View.VISIBLE)
-        progressBarVisibility.set(View.GONE)
+        progressBarVisibility.set(View.INVISIBLE)
         recyclerViewVisibility.set(View.GONE)
     }
 
