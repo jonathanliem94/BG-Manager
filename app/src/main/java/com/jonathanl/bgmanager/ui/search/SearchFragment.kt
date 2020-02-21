@@ -72,6 +72,10 @@ class SearchFragment : BaseFragment() {
     private fun handleSearchResults(results: BoardGameSearchResults) {
         if ((results.resultsArray.isNullOrEmpty()).not()) {
             (recyclerView.adapter as SearchViewAdapter).submitList(results.resultsArray)
+            searchViewModel.setVisibilityAfterSearchWithResults()
+        }
+        else {
+            searchViewModel.setVisibilityAfterSearchWithNoResults()
         }
     }
 

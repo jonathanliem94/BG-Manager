@@ -16,15 +16,15 @@ class SearchViewModel(
     private val gameListUseCase: GameListUseCase
 ) : ViewModel() {
 
-    val text = ObservableField<String>()
-    val textViewVisibility = ObservableInt()
-    val progressBarVisibility = ObservableInt()
-    val recyclerViewVisibility = ObservableInt()
+    val text = ObservableField<String>("Let's start a search!")
+    val textViewVisibility = ObservableInt(View.VISIBLE)
+    val progressBarVisibility = ObservableInt(View.GONE)
+    val recyclerViewVisibility = ObservableInt(View.VISIBLE)
     val boardGameSearchResults = networkUseCase.boardGameSearchResults
+    private val disposable: Disposable
 
     init {
-        setVisibilityDuringInit()
-        subscribeToSearchStatus()
+        disposable = subscribeToSearchStatus()
     }
 
     fun addNewEntryToGameList(newGameListEntry: GameListEntry) {
@@ -38,22 +38,12 @@ class SearchViewModel(
                 onNext = {
                     when (it) {
                         SEARCH_START -> setVisibilityDuringSearch()
-                        NO_RESULT -> setVisibilityAfterSearchWithNoResults()
-                        NORMAL_RESULT -> setVisibilityAfterSearchWithResults()
                     }
                 },
                 onError = {
                     Log.e("SearchViewModel", "subscribeToSearchStatus failed. $it")
                 }
             )
-    }
-
-    @VisibleForTesting
-    fun setVisibilityDuringInit() {
-        text.set("Let's start a search!")
-        textViewVisibility.set(View.VISIBLE)
-        progressBarVisibility.set(View.GONE)
-        recyclerViewVisibility.set(View.VISIBLE)
     }
 
     @VisibleForTesting
@@ -64,19 +54,22 @@ class SearchViewModel(
         recyclerViewVisibility.set(View.GONE)
     }
 
-    @VisibleForTesting
     fun setVisibilityAfterSearchWithResults() {
         textViewVisibility.set(View.GONE)
         progressBarVisibility.set(View.GONE)
         recyclerViewVisibility.set(View.VISIBLE)
     }
 
-    @VisibleForTesting
     fun setVisibilityAfterSearchWithNoResults() {
         text.set("Oops, there seems to be no results!")
         textViewVisibility.set(View.VISIBLE)
         progressBarVisibility.set(View.GONE)
         recyclerViewVisibility.set(View.GONE)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable.dispose()
     }
 
 }

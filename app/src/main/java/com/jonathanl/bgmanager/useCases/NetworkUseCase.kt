@@ -12,8 +12,6 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
 const val SEARCH_START = 1
-const val NO_RESULT = 2
-const val NORMAL_RESULT = 0
 
 interface  NetworkUseCase {
 
@@ -29,7 +27,7 @@ class NetworkUseCaseImpl(
 ): NetworkUseCase {
 
     // SearchStarted observable
-    private val searchStatusPublisher = PublishSubject.create<Int>()
+    private val searchStatusPublisher: PublishSubject<Int> = PublishSubject.create()
     override val searchStatus = searchStatusPublisher.hide()
 
     // SearchResults observable
@@ -48,14 +46,8 @@ class NetworkUseCaseImpl(
         return networkService.getBoardGameSearchResults(gameName)
             .subscribeOn(Schedulers.io())
             .subscribeBy (
-                onNext = {
+                onSuccess = {
                     boardGameSearchResultsBehaviour.onNext(it)
-                    if (it.total != "0") {
-                        searchStatusPublisher.onNext(NORMAL_RESULT)
-                    }
-                    else {
-                        searchStatusPublisher.onNext(NO_RESULT)
-                    }
                 },
                 onError = {
                     Log.e("NetworkUseCase", "makeBoardGameSearch failed. $it")

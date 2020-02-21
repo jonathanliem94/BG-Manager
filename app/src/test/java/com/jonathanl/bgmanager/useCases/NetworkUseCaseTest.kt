@@ -5,7 +5,7 @@ import com.jonathanl.bgmanager.network.BoardGameResult
 import com.jonathanl.bgmanager.network.BoardGameSearchResults
 import com.jonathanl.bgmanager.network.NetworkService
 import com.nhaarman.mockitokotlin2.*
-import io.reactivex.Observable
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -23,18 +23,11 @@ class NetworkUseCaseTest {
             "bg","123", BoardGameName("bg", "Panic!")
         ))
     )
-
     private val noResult = BoardGameSearchResults(
         total = "0",
         termsofuse = "placeholder",
         resultsArray = listOf()
     )
-
-    @Before
-    fun setUp() {
-        whenever(networkService.getBoardGameSearchResults(testSearchQuery))
-            .thenReturn(Observable.just(fakeResult))
-    }
 
     @Test
     fun `when the search query is blank, no search will be conducted`() {
@@ -47,42 +40,38 @@ class NetworkUseCaseTest {
             .assertEmpty()
     }
 
-    @Ignore("search status not emitting properly")
     @Test
     fun `when the search query is conducted, search status is emitted as SEARCH_START`() {
         whenever(networkService.getBoardGameSearchResults(testSearchQuery))
-            .thenReturn(Observable.empty())
+            .thenReturn(Single.just(BoardGameSearchResults()))
+        val testObservable = networkUseCaseUnderTest.searchStatus.test()
 
         networkUseCaseUnderTest.onSubmitSearchQuery(testSearchQuery)
 
-        networkUseCaseUnderTest.searchStatus.test()
-            .assertValue(SEARCH_START)
+        testObservable.assertValue(SEARCH_START)
     }
 
-    @Ignore("search status not emitting properly")
     @Test
     fun `when search ends, search status is emitted correctly for zero results`() {
         whenever(networkService.getBoardGameSearchResults(testSearchQuery))
-            .thenReturn(Observable.just(noResult))
+            .thenReturn(Single.just(noResult))
 
         networkUseCaseUnderTest.onSubmitSearchQuery(testSearchQuery)
 
         networkUseCaseUnderTest.boardGameSearchResults.test()
             .assertValue{it == noResult}
-        networkUseCaseUnderTest.searchStatus.test()
-            .assertValue(NO_RESULT)
 
     }
 
-    @Ignore("search status not emitting properly")
     @Test
     fun `when search ends, search status is emitted correctly for normal results`() {
+        whenever(networkService.getBoardGameSearchResults(testSearchQuery))
+            .thenReturn(Single.just(fakeResult))
+
         networkUseCaseUnderTest.onSubmitSearchQuery(testSearchQuery)
 
         networkUseCaseUnderTest.boardGameSearchResults.test()
             .assertValue{it == fakeResult}
-        networkUseCaseUnderTest.searchStatus.test()
-            .assertValue(NORMAL_RESULT)
 
     }
 
