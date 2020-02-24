@@ -1,9 +1,9 @@
 package com.jonathanl.bgmanager.useCases
 
-import com.jonathanl.bgmanager.network.models.BoardGameName
-import com.jonathanl.bgmanager.network.models.BoardGameResult
-import com.jonathanl.bgmanager.network.models.BoardGameSearchResults
-import com.jonathanl.bgmanager.network.NetworkService
+import com.jonathanl.bgmanager.data.models.BoardGameName
+import com.jonathanl.bgmanager.data.models.BoardGameResult
+import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
+import com.jonathanl.bgmanager.data.NetworkService
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Single
 import org.junit.Test
@@ -31,8 +31,6 @@ class NetworkUseCaseTest {
             total = "0",
             resultsArray = listOf()
         )
-
-
 
     @Test
     fun `when the search query is blank, no search will be conducted`() {

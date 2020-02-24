@@ -7,13 +7,10 @@ class BoardGameDetailsViewModel(
     private val networkUseCase: NetworkUseCase
 ) : ViewModel() {
 
+    val boardGameDetails = networkUseCase.boardGameDetails
+
     fun getBoardGameDetails(gameId: String) {
-
-    }
-
-
-    override fun onCleared() {
-        super.onCleared()
+        networkUseCase.onSubmitQueryForBoardGameDetails(gameId)
     }
 
 }

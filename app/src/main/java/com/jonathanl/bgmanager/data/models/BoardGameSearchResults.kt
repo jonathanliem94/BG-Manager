@@ -1,4 +1,4 @@
-package com.jonathanl.bgmanager.network.models
+package com.jonathanl.bgmanager.data.models
 
 import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Element

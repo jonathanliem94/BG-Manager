@@ -22,6 +22,10 @@
 - GameList Fragment
   - ViewModel uses `LiveData`
 
+- BoardGameDetails Fragment
+  - Uses `findViewById` to set UI
+  - NestedScroll View for games with excessive details
+
 - GameListUseCase
   - Handles gameList operations and emits GameList using `BehaviorSubject`
 
@@ -35,6 +39,8 @@
 - RxJava/Kotlin/Android for reactive programming
 - Dagger2 for Dependency Injection
   - Use of abstraction to handle references to components required by other components
+  (see BaseActivity/BaseFragment)
+
 - Retrofit2 for network calls
 - Espresso for UI tests
 - Mockito-Kotlin for Unit tests

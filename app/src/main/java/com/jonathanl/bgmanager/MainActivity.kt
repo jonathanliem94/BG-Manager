@@ -14,7 +14,6 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.SearchView
 import com.jonathanl.bgmanager.base.BaseActivity
-import com.jonathanl.bgmanager.useCases.NetworkUseCase
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -22,7 +21,7 @@ class MainActivity : BaseActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     @Inject
-    lateinit var networkUseCase: NetworkUseCase
+    lateinit var mainActivityVM: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,11 +64,9 @@ class MainActivity : BaseActivity() {
                 }
 
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (query != null) {
-                        networkUseCase.onSubmitQueryForBoardGameSearch(query)
-                        //ensure focus on search bar is lost after a search
-                        this@apply.onActionViewCollapsed()
-                    }
+                    mainActivityVM.conductBoardGameSearch(query)
+                    //ensure focus on search bar is lost after a search
+                    this@apply.onActionViewCollapsed()
                     return true
                 }
             })

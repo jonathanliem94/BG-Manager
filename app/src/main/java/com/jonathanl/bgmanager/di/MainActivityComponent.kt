@@ -1,7 +1,8 @@
 package com.jonathanl.bgmanager.di
 
 import com.jonathanl.bgmanager.MainActivity
-import com.jonathanl.bgmanager.network.NetworkService
+import com.jonathanl.bgmanager.MainActivityViewModel
+import com.jonathanl.bgmanager.data.NetworkService
 import com.jonathanl.bgmanager.useCases.GameListUseCase
 import com.jonathanl.bgmanager.useCases.GameListUseCaseImpl
 import com.jonathanl.bgmanager.useCases.NetworkUseCase
@@ -48,5 +49,10 @@ object MainActivityModule {
     @ActivityScope
     fun provideNetworkUseCase(networkService: NetworkService): NetworkUseCase =
         NetworkUseCaseImpl(networkService)
+
+    @Provides
+    @ActivityScope
+    fun provideMainActivityViewModel(networkUseCase: NetworkUseCase): MainActivityViewModel =
+        MainActivityViewModel(networkUseCase)
 
 }

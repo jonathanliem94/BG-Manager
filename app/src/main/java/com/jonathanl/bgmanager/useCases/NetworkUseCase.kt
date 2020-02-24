@@ -2,9 +2,9 @@ package com.jonathanl.bgmanager.useCases
 
 import android.util.Log
 import androidx.annotation.VisibleForTesting
-import com.jonathanl.bgmanager.network.models.BoardGameSearchResults
-import com.jonathanl.bgmanager.network.NetworkService
-import com.jonathanl.bgmanager.network.models.BoardGameInfo
+import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
+import com.jonathanl.bgmanager.data.NetworkService
+import com.jonathanl.bgmanager.data.models.BoardGameInfo
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
