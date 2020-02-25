@@ -3,13 +3,13 @@ package com.jonathanl.bgmanager
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.widget.SearchView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import android.view.Menu
-import android.widget.SearchView
 import com.jonathanl.bgmanager.base.BaseActivity
 import com.jonathanl.bgmanager.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.app_bar_main.view.*

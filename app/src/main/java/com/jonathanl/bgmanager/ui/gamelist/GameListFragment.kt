@@ -2,19 +2,19 @@ package com.jonathanl.bgmanager.ui.gamelist
 
 import android.os.Bundle
 import android.util.Log
-import android.view.*
-import androidx.lifecycle.Observer
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jonathanl.bgmanager.di.DaggerGameListComponent
 import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.databinding.FragmentGameListBinding
+import com.jonathanl.bgmanager.di.DaggerGameListComponent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_game_list.view.*
 import javax.inject.Inject
 
 class GameListFragment : BaseFragment(), GameListDragListener {
@@ -33,9 +33,6 @@ class GameListFragment : BaseFragment(), GameListDragListener {
     ): View? {
         setUpDI()
         _binding = FragmentGameListBinding.inflate(inflater, container, false)
-        gameListViewModel.text.observe(viewLifecycleOwner, Observer {
-            binding.root.gameListText.text = it
-        })
         return binding.root
     }
 
@@ -64,11 +61,6 @@ class GameListFragment : BaseFragment(), GameListDragListener {
             .subscribeBy (
                 onNext = {
                     (binding.recyclerViewGameList.adapter as GameListViewAdapter).submitList(it)
-                    if (it.size == 0){
-
-                    } else {
-
-                    }
                 },
                 onError = {
                     Log.e("GameListFragment", "subscribeToGameListObservable failed. $it")
