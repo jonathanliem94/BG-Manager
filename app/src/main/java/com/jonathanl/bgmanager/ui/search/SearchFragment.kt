@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
 import com.jonathanl.bgmanager.di.DaggerSearchComponent
@@ -26,7 +25,6 @@ class SearchFragment : BaseFragment() {
     @Inject
     lateinit var searchViewModel: SearchViewModel
 
-    private lateinit var recyclerView: RecyclerView
     // Binding exists between onCreateView and onDestroyView
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -47,7 +45,7 @@ class SearchFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_search).apply {
+        binding.recyclerViewSearch.apply {
             // use a linear layout manager
             layoutManager = LinearLayoutManager(this.context)
             // specify an viewAdapter
@@ -74,7 +72,7 @@ class SearchFragment : BaseFragment() {
             )
     }
 
-    fun subscribeToSearchStatus(): Disposable {
+    private fun subscribeToSearchStatus(): Disposable {
         return searchViewModel.boardGameSearchStatus
             .subscribeBy (
                 onNext = {
@@ -125,7 +123,7 @@ class SearchFragment : BaseFragment() {
 
     private fun handleSearchResults(results: BoardGameSearchResults) {
         if ((results.resultsArray.isNullOrEmpty()).not()) {
-            (recyclerView.adapter as SearchViewAdapter).submitList(results.resultsArray)
+            (binding.recyclerViewSearch.adapter as SearchViewAdapter).submitList(results.resultsArray)
             setVisibilityAfterSearchWithResults()
         }
         else {

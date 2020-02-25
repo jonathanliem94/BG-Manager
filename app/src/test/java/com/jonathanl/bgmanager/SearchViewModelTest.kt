@@ -1,6 +1,5 @@
 package com.jonathanl.bgmanager
 
-import android.view.View
 import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
 import com.jonathanl.bgmanager.ui.search.SearchViewModel
 import com.jonathanl.bgmanager.useCases.*
@@ -8,7 +7,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -16,7 +14,7 @@ class SearchViewModelTest {
 
     private val networkUseCase: NetworkUseCase = mock()
     private val gameListUseCase: GameListUseCase = mock()
-    lateinit var searchViewModelUnderTest: SearchViewModel
+    private lateinit var searchViewModelUnderTest: SearchViewModel
 
     @Before
     fun setUp() {

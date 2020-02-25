@@ -34,7 +34,7 @@ class MainMenuNavigationTest {
         onView(withId(R.id.nav_view))
             .perform(NavigationViewActions.navigateTo(R.id.nav_game_list))
 
-        onView(withId(R.id.text_gamelist)).check(matches(isDisplayed()))
+        onView(withId(R.id.gameListText)).check(matches(isDisplayed()))
     }
 
 }

@@ -15,7 +15,7 @@ class GameListUseCaseImpl: GameListUseCase {
 
     // Game List Observable
     private val gameListBehavior: BehaviorSubject<MutableList<GameListEntry>> = BehaviorSubject.create()
-    override val gameListHolder = gameListBehavior.hide()
+    override val gameListHolder: Observable<MutableList<GameListEntry>> = gameListBehavior.hide()
 
     override fun handleNewGameEntry(newGameListEntry: GameListEntry) {
         val gameList = gameListBehavior.value ?: mutableListOf()

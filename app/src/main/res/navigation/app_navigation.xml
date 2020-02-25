@@ -42,12 +42,6 @@
         tools:layout="@layout/fragment_share" />
 
     <fragment
-        android:id="@+id/nav_send"
-        android:name="com.jonathanl.bgmanager.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
-
-    <fragment
         android:id="@+id/nav_game_details"
         android:name="com.jonathanl.bgmanager.ui.boardgamedetails.BoardGameDetailsFragment"
         android:label="@string/menu_game_details"

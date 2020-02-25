@@ -8,31 +8,29 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
-import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.SearchView
 import com.jonathanl.bgmanager.base.BaseActivity
+import com.jonathanl.bgmanager.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.app_bar_main.view.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
     @Inject
     lateinit var mainActivityVM: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.drawerLayout.toolbar)
 
         setUpDI()
-        setContentView(R.layout.activity_main)
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -42,12 +40,11 @@ class MainActivity : BaseActivity() {
                 R.id.nav_game_list,
                 R.id.nav_tools,
                 R.id.nav_settings,
-                R.id.nav_share,
-                R.id.nav_send
-            ), drawerLayout
+                R.id.nav_share
+            ), binding.drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        binding.navView.setupWithNavController(navController)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

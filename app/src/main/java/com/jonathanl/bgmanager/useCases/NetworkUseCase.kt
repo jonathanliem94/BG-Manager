@@ -31,15 +31,15 @@ class NetworkUseCaseImpl(
 
     // SearchStarted observable
     private val searchStatusPublisher: PublishSubject<Int> = PublishSubject.create()
-    override val searchStatus = searchStatusPublisher.hide()
+    override val searchStatus: Observable<Int> = searchStatusPublisher.hide()
 
     // BoardGame SearchResults observable
     private val boardGameSearchResultsBehaviour: BehaviorSubject<BoardGameSearchResults> = BehaviorSubject.create()
-    override val boardGameSearchResults = boardGameSearchResultsBehaviour.hide()
+    override val boardGameSearchResults: Observable<BoardGameSearchResults> = boardGameSearchResultsBehaviour.hide()
 
     // BoardGameDetails Results observable
     private val boardGameDetailsPublish: PublishSubject<BoardGameInfo> = PublishSubject.create()
-    override val boardGameDetails = boardGameDetailsPublish.hide()
+    override val boardGameDetails: Observable<BoardGameInfo> = boardGameDetailsPublish.hide()
 
     override fun onSubmitQueryForBoardGameSearch(searchQuery: String) {
         if (searchQuery.isNotBlank()){

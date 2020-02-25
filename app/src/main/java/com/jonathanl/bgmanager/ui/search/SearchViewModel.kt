@@ -5,7 +5,7 @@ import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
 import com.jonathanl.bgmanager.useCases.*
 
 class SearchViewModel(
-    private val networkUseCase: NetworkUseCase,
+    networkUseCase: NetworkUseCase,
     private val gameListUseCase: GameListUseCase
 ) : ViewModel() {
 

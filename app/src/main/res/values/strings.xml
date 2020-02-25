@@ -27,6 +27,9 @@
     <string name="search_name_not_found">N/A</string>
     <string name="search_image_desc">Search Result Image</string>
 
+    <!-- BoardGame List Fragment -->
+    <string name="bg_list_empty">Your list is empty</string>
+
     <!-- BoardGame Details Fragment -->
     <string name="bg_details_minmaxplayers">No. of Players: %1$s to %2$s</string>
     <string name="bg_details_minmaxplaytime">Playtime (minutes): %1$s to %2$s</string>

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.jonathanl.bgmanager.useCases.GameListUseCase
 
 class GameListViewModel(
-    private val gameListUseCase: GameListUseCase
+    gameListUseCase: GameListUseCase
 ) : ViewModel() {
 
     val gameListHolder = gameListUseCase.gameListHolder

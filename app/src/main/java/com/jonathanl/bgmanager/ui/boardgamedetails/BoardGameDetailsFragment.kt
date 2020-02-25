@@ -6,11 +6,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.navigation.fragment.navArgs
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.data.models.BoardGameData
+import com.jonathanl.bgmanager.databinding.FragmentGameDetailsBinding
 import com.jonathanl.bgmanager.di.DaggerBoardGameDetailsComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -22,7 +22,9 @@ class BoardGameDetailsFragment : BaseFragment() {
     @Inject
     lateinit var boardGameDetailsViewModel: BoardGameDetailsViewModel
     private val args: BoardGameDetailsFragmentArgs by navArgs()
-    lateinit var disposable: Disposable
+    private var _binding: FragmentGameDetailsBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var disposable: Disposable
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,11 +32,9 @@ class BoardGameDetailsFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         setUpDI()
-        val root = inflater.inflate(R.layout.fragment_game_details, container, false)
-        disposable = subscribeToBoardGameDetails()
-        initialiseUI(root)
-        boardGameDetailsViewModel.getBoardGameDetails(args.gameId)
-        return root
+        _binding = FragmentGameDetailsBinding.inflate(inflater, container, false)
+        initialiseUI()
+        return binding.root
     }
 
     private fun subscribeToBoardGameDetails(): Disposable {
@@ -52,19 +52,21 @@ class BoardGameDetailsFragment : BaseFragment() {
 
     private fun initialiseGameData(boardGameData: BoardGameData) {
         Log.d("BGameDetailsFragment", "initialiseGameData = $boardGameData")
-        view?.run {
-            findViewById<TextView>(R.id.gamePublishYearText).text = getString(R.string.bg_details_yearpublished, boardGameData.yearPublished)
-            findViewById<TextView>(R.id.gameMinMaxPlayersText).text = getString(R.string.bg_details_minmaxplayers, boardGameData.minPlayers, boardGameData.maxPlayers)
-            findViewById<TextView>(R.id.gameMinMaxPlayTimeText).text = getString(R.string.bg_details_minmaxplaytime, boardGameData.minPlayTime, boardGameData.maxPlayTime)
-            findViewById<TextView>(R.id.gameDescriptionText).text = Html.fromHtml(boardGameData.description)
+        binding.run {
+            gamePublishYearText.text = getString(R.string.bg_details_yearpublished, boardGameData.yearPublished)
+            gameMinMaxPlayersText.text = getString(R.string.bg_details_minmaxplayers, boardGameData.minPlayers, boardGameData.maxPlayers)
+            gameMinMaxPlayTimeText.text = getString(R.string.bg_details_minmaxplaytime, boardGameData.minPlayTime, boardGameData.maxPlayTime)
+            gameDescriptionText.text = Html.fromHtml(boardGameData.description)
         }
     }
 
-    private fun initialiseUI(root: View) {
-        val gameNameTextView: TextView = root.findViewById(R.id.gameNameText)
-        val gameIdTextView: TextView = root.findViewById(R.id.gameIdText)
-        gameNameTextView.text = args.gameName
-        gameIdTextView.text = args.gameId
+    private fun initialiseUI() {
+        disposable = subscribeToBoardGameDetails()
+        boardGameDetailsViewModel.getBoardGameDetails(args.gameId)
+        binding.run {
+            gameNameText.text = args.gameName
+            gameIdText.text = args.gameId
+        }
     }
 
     private fun setUpDI() {
@@ -76,6 +78,7 @@ class BoardGameDetailsFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        _binding = null
         disposable.dispose()
     }
 }
