@@ -86,7 +86,6 @@ class GameListFragment : BaseFragment(), GameListDragListener {
     }
 }
 
-
 interface GameListDragListener {
 
     fun onStartDrag(viewHolder: RecyclerView.ViewHolder)

@@ -52,7 +52,7 @@ object MainActivityModule {
 
     @Provides
     @ActivityScope
-    fun provideMainActivityViewModel(networkUseCase: NetworkUseCase): MainActivityViewModel =
-        MainActivityViewModel(networkUseCase)
+    fun provideMainActivityViewModel(): MainActivityViewModel =
+        MainActivityViewModel()
 
 }

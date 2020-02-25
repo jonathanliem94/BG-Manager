@@ -2,10 +2,11 @@ package com.jonathanl.bgmanager.ui.search
 
 import androidx.lifecycle.ViewModel
 import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
-import com.jonathanl.bgmanager.useCases.*
+import com.jonathanl.bgmanager.useCases.GameListUseCase
+import com.jonathanl.bgmanager.useCases.NetworkUseCase
 
 class SearchViewModel(
-    networkUseCase: NetworkUseCase,
+    private val networkUseCase: NetworkUseCase,
     private val gameListUseCase: GameListUseCase
 ) : ViewModel() {
 
@@ -16,4 +17,9 @@ class SearchViewModel(
         gameListUseCase.handleNewGameEntry(newGameListEntry)
     }
 
+    fun conductBoardGameSearch(searchQuery: String?) {
+        if (searchQuery != null) {
+            networkUseCase.onSubmitQueryForBoardGameSearch(searchQuery)
+        }
+    }
 }

@@ -2,16 +2,15 @@ package com.jonathanl.bgmanager.ui.search
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jonathanl.bgmanager.R
-import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
-import com.jonathanl.bgmanager.di.DaggerSearchComponent
 import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
+import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
+import com.jonathanl.bgmanager.di.DaggerSearchComponent
 import com.jonathanl.bgmanager.useCases.SEARCH_START
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -39,6 +38,7 @@ class SearchFragment : BaseFragment() {
         setUpDI()
         //ViewBinding, inflating the view, and setting the viewmodel
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -53,9 +53,29 @@ class SearchFragment : BaseFragment() {
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL))
         }
 
-        // Subscribe to search results in sharedviewmodel
         setUpInitialUI()
         compositeDisposable.addAll(subscribeToSearchResults(), subscribeToSearchStatus())
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.options_menu_search_fragment, menu)
+        val searchView = (menu.findItem(R.id.search_action_bar).actionView as SearchView)
+        searchView.apply {
+            queryHint = getString(R.string.search_hint)
+            setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    searchViewModel.conductBoardGameSearch(query)
+                    //ensure focus on search bar is lost after a search
+                    this@apply.clearFocus()
+                    return true
+                }
+            })
+        }
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun subscribeToSearchResults(): Disposable {
@@ -84,6 +104,16 @@ class SearchFragment : BaseFragment() {
                     Log.e("SearchViewModel", "subscribeToSearchStatus failed. $it")
                 }
             )
+    }
+
+    private fun handleSearchResults(results: BoardGameSearchResults) {
+        if ((results.resultsArray.isNullOrEmpty()).not()) {
+            (binding.recyclerViewSearch.adapter as SearchViewAdapter).submitList(results.resultsArray)
+            setVisibilityAfterSearchWithResults()
+        }
+        else {
+            setVisibilityAfterSearchWithNoResults()
+        }
     }
 
     private fun setUpInitialUI() {
@@ -118,16 +148,6 @@ class SearchFragment : BaseFragment() {
             searchStatusText.text = getString(R.string.search_no_results)
             searchStatusText.visibility = View.VISIBLE
             recyclerViewSearch.visibility = View.GONE
-        }
-    }
-
-    private fun handleSearchResults(results: BoardGameSearchResults) {
-        if ((results.resultsArray.isNullOrEmpty()).not()) {
-            (binding.recyclerViewSearch.adapter as SearchViewAdapter).submitList(results.resultsArray)
-            setVisibilityAfterSearchWithResults()
-        }
-        else {
-            setVisibilityAfterSearchWithNoResults()
         }
     }
 

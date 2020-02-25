@@ -1,10 +1,10 @@
 package com.jonathanl.bgmanager.useCases
 
-import com.jonathanl.bgmanager.data.models.BoardGameName
-import com.jonathanl.bgmanager.data.models.BoardGameResult
-import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
 import com.jonathanl.bgmanager.data.NetworkService
-import com.nhaarman.mockitokotlin2.*
+import com.jonathanl.bgmanager.data.models.*
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import org.junit.Test
 
@@ -26,11 +26,13 @@ class NetworkUseCaseTest {
                 )
             )
         )
-    private val noSearchResult =
-        BoardGameSearchResults(
-            total = "0",
-            resultsArray = listOf()
+    private val testGameId = "123"
+    private val testBoardGameInfo = BoardGameInfo(
+        BoardGameData(
+            yearPublished = "2020",
+            description = "test123"
         )
+    )
 
     @Test
     fun `when the search query is blank, no search will be conducted`() {
@@ -44,7 +46,20 @@ class NetworkUseCaseTest {
     }
 
     @Test
-    fun `when the game id is blank, call for details will not be conducted`() {
+    fun `when the search query is conducted, search status is emitted as SEARCH_START, and search result is emitted correctly`() {
+        whenever(networkService.getBoardGameSearchResults(testSearchQuery))
+            .thenReturn(Single.just(fakeSearchResult))
+        val testObservableSearchStatus = networkUseCaseUnderTest.searchStatus.test()
+        val testObservableSearchResult = networkUseCaseUnderTest.boardGameSearchResults.test()
+
+        networkUseCaseUnderTest.onSubmitQueryForBoardGameSearch(testSearchQuery)
+
+        testObservableSearchStatus.assertValue(SEARCH_START)
+        testObservableSearchResult.awaitCount(1).assertValue(fakeSearchResult)
+    }
+
+    @Test
+    fun `when the game id is blank, request for game details will not be invoked`() {
         val emptyGameId  = ""
 
         networkUseCaseUnderTest.onSubmitQueryForBoardGameDetails(emptyGameId)
@@ -53,37 +68,16 @@ class NetworkUseCaseTest {
     }
 
     @Test
-    fun `when the search query is conducted, search status is emitted as SEARCH_START`() {
-        whenever(networkService.getBoardGameSearchResults(testSearchQuery))
-            .thenReturn(Single.just(BoardGameSearchResults()))
-        val testObservable = networkUseCaseUnderTest.searchStatus.test()
+    fun `when game id is valid, request for game details will be invoked`() {
+        whenever(networkService.getBoardGameInfo(testGameId))
+            .thenReturn(Single.just(testBoardGameInfo))
+        val testObservable = networkUseCaseUnderTest.boardGameDetails.test()
 
-        networkUseCaseUnderTest.onSubmitQueryForBoardGameSearch(testSearchQuery)
+        networkUseCaseUnderTest.onSubmitQueryForBoardGameDetails(testGameId)
 
-        testObservable.assertValue(SEARCH_START)
-    }
-
-    @Test
-    fun `when search ends, search status is emitted correctly for zero results`() {
-        whenever(networkService.getBoardGameSearchResults(testSearchQuery))
-            .thenReturn(Single.just(noSearchResult))
-
-        networkUseCaseUnderTest.onSubmitQueryForBoardGameSearch(testSearchQuery)
-
-        networkUseCaseUnderTest.boardGameSearchResults.test()
-            .assertValue{it == noSearchResult}
-
-    }
-
-    @Test
-    fun `when search ends, search status is emitted correctly for normal results`() {
-        whenever(networkService.getBoardGameSearchResults(testSearchQuery))
-            .thenReturn(Single.just(fakeSearchResult))
-
-        networkUseCaseUnderTest.onSubmitQueryForBoardGameSearch(testSearchQuery)
-
-        networkUseCaseUnderTest.boardGameSearchResults.test()
-            .assertValue{it == fakeSearchResult}
+        testObservable
+            .awaitCount(1)
+            .assertValue(testBoardGameInfo)
 
     }
 

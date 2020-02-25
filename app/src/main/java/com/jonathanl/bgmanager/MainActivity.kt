@@ -1,10 +1,6 @@
 package com.jonathanl.bgmanager
 
-import android.app.SearchManager
-import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.widget.SearchView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -26,12 +22,13 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
         setSupportActionBar(binding.drawerLayout.toolbar)
+        val navController = findNavController(R.id.nav_host_fragment)
 
         setUpDI()
 
-        val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
@@ -47,30 +44,7 @@ class MainActivity : BaseActivity() {
         binding.navView.setupWithNavController(navController)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.action_bar, menu)
-
-        // Associate searchable configuration with the SearchView
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        (menu.findItem(R.id.search_action_bar).actionView as SearchView).apply {
-            setSearchableInfo(searchManager.getSearchableInfo(componentName))
-            setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    return false
-                }
-
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    mainActivityVM.conductBoardGameSearch(query)
-                    //ensure focus on search bar is lost after a search
-                    this@apply.onActionViewCollapsed()
-                    return true
-                }
-            })
-        }
-        return true
-    }
-
+    // to enable the toolbar to support Up navigation
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
