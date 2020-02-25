@@ -16,14 +16,16 @@
 - Search Fragment
   - Contains RecyclerView with ListAdapter
   - Clicking a result will navigate to a new fragment
-  - Layout file uses data-binding for modifying visibility
+  - ~~Layout file uses data-binding for modifying visibility~~
+  - Uses view-binding to modify UI states
   - ViewModel uses `ObservableField`
     
 - GameList Fragment
   - ViewModel uses `LiveData`
 
 - BoardGameDetails Fragment
-  - Uses `findViewById` to set UI
+  - ~~Uses `findViewById` to set UI~~
+  - Uses view-binding to modify UI
   - NestedScroll View for games with excessive details
 
 - GameListUseCase

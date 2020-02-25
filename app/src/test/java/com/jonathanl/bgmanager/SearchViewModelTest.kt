@@ -35,38 +35,4 @@ class SearchViewModelTest {
         verify(gameListUseCase).handleNewGameEntry(testGameListEntry)
     }
 
-    @Test
-    fun `when search has just started, set visibility accordingly`() {
-        val disposable = searchViewModelUnderTest.subscribeToSearchStatus()
-        Assert.assertEquals(View.VISIBLE, searchViewModelUnderTest.progressBarVisibility.get())
-        Assert.assertEquals(View.GONE, searchViewModelUnderTest.recyclerViewVisibility.get())
-        Assert.assertEquals(View.VISIBLE, searchViewModelUnderTest.textViewVisibility.get())
-        disposable.dispose()
-    }
-
-    @Test
-    fun `when search return no results, set visibility accordingly`() {
-        searchViewModelUnderTest.setVisibilityAfterSearchWithNoResults()
-        Assert.assertEquals(View.GONE, searchViewModelUnderTest.progressBarVisibility.get())
-        Assert.assertEquals(View.GONE, searchViewModelUnderTest.recyclerViewVisibility.get())
-        Assert.assertEquals(View.VISIBLE, searchViewModelUnderTest.textViewVisibility.get())
-    }
-
-    @Test
-    fun `when search returns normally, set visibility accordingly`() {
-        searchViewModelUnderTest.setVisibilityAfterSearchWithResults()
-        Assert.assertEquals(View.GONE, searchViewModelUnderTest.progressBarVisibility.get())
-        Assert.assertEquals(View.VISIBLE, searchViewModelUnderTest.recyclerViewVisibility.get())
-        Assert.assertEquals(View.GONE, searchViewModelUnderTest.textViewVisibility.get())
-    }
-
-    @Test
-    fun `RecyclerView is GONE, Progress Bar is GONE, TextView is VISIBLE, on initialisation`() {
-        whenever(networkUseCase.searchStatus).thenReturn(Observable.empty())
-        searchViewModelUnderTest = SearchViewModel(networkUseCase, gameListUseCase)
-        Assert.assertEquals(View.GONE, searchViewModelUnderTest.progressBarVisibility.get())
-        Assert.assertEquals(View.VISIBLE, searchViewModelUnderTest.recyclerViewVisibility.get())
-        Assert.assertEquals(View.VISIBLE, searchViewModelUnderTest.textViewVisibility.get())
-    }
-
 }
