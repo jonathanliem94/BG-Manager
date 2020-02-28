@@ -58,8 +58,8 @@ class SearchFragment : BaseFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.options_menu_search_fragment, menu)
-        val searchView = (menu.findItem(R.id.search_action_bar).actionView as SearchView)
+        inflater.inflate(R.menu.options_menu_search, menu)
+        val searchView = (menu.findItem(R.id.search_option).actionView as SearchView)
         searchView.apply {
             queryHint = getString(R.string.search_hint)
             setOnQueryTextListener(object: SearchView.OnQueryTextListener{

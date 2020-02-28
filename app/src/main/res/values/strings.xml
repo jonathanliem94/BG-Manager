@@ -2,7 +2,8 @@
     <string name="app_name">BG Manager</string>
 
     <!-- Action Bar -->
-    <string name="search_widget_name">Search</string>
+    <string name="search_option">Search</string>
+    <string name="add_game_option">Search</string>
 
     <!-- Navigation Menu Headings -->
     <string name="nav_header_title">BG Manager</string>

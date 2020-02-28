@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/search_action_bar"
-        android:title="@string/search_widget_name"
+        android:id="@+id/search_option"
+        android:title="@string/search_option"
         android:icon="@drawable/ic_action_bar_search"
         app:showAsAction="ifRoom"
         app:actionViewClass="android.widget.SearchView"/>

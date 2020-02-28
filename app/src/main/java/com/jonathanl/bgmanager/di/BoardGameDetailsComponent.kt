@@ -2,6 +2,7 @@ package com.jonathanl.bgmanager.di
 
 import com.jonathanl.bgmanager.ui.boardgamedetails.BoardGameDetailsFragment
 import com.jonathanl.bgmanager.ui.boardgamedetails.BoardGameDetailsViewModel
+import com.jonathanl.bgmanager.useCases.GameListUseCase
 import com.jonathanl.bgmanager.useCases.NetworkUseCase
 import dagger.Component
 import dagger.Module
@@ -23,7 +24,13 @@ object BoardGameDetailsModule {
 
     @Provides
     @FragmentScope
-    fun provideBoardGameDetailsViewModel(networkUseCase: NetworkUseCase): BoardGameDetailsViewModel =
-        BoardGameDetailsViewModel(networkUseCase)
+    fun provideBoardGameDetailsViewModel(
+        networkUseCase: NetworkUseCase,
+        gameListUseCase: GameListUseCase
+    ): BoardGameDetailsViewModel =
+        BoardGameDetailsViewModel(
+            networkUseCase,
+            gameListUseCase
+        )
 
 }

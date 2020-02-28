@@ -3,9 +3,8 @@ package com.jonathanl.bgmanager.ui.boardgamedetails
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.base.BaseFragment
@@ -32,10 +31,33 @@ class BoardGameDetailsFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         setUpDI()
         _binding = FragmentGameDetailsBinding.inflate(inflater, container, false)
         initialiseUI()
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.options_menu_game_details, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_game_option -> {
+                binding.run {
+                    boardGameDetailsViewModel.addToGameList(
+                        gameNameText.text.toString(),
+                        gameIdText.text.toString()
+                    )
+                    val toast = Toast.makeText(view?.context, "Added to game list", Toast.LENGTH_SHORT)
+                    toast.show()
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun subscribeToBoardGameDetails(): Disposable {
