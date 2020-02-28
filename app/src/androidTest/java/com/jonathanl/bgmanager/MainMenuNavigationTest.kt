@@ -6,7 +6,8 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.DrawerMatchers.isClosed
 import androidx.test.espresso.contrib.NavigationViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.junit.Rule
@@ -26,7 +27,7 @@ class MainMenuNavigationTest {
     }
 
     @Test
-    fun navigateToGameList() {
+    fun navigateToGameListScreen() {
         onView(withId(R.id.drawer_layout))
             .check(matches(isClosed(Gravity.LEFT)))
             .perform(DrawerActions.open())
@@ -35,6 +36,29 @@ class MainMenuNavigationTest {
             .perform(NavigationViewActions.navigateTo(R.id.nav_game_list))
 
         onView(withId(R.id.gameListText)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun navigateMultipleTimesEndingAtSearchScreen() {
+        onView(withId(R.id.drawer_layout))
+            .check(matches(isClosed(Gravity.LEFT)))
+            .perform(DrawerActions.open())
+        onView(withId(R.id.nav_view))
+            .perform(NavigationViewActions.navigateTo(R.id.nav_settings))
+
+        onView(withId(R.id.drawer_layout))
+            .check(matches(isClosed(Gravity.LEFT)))
+            .perform(DrawerActions.open())
+        onView(withId(R.id.nav_view))
+            .perform(NavigationViewActions.navigateTo(R.id.nav_share))
+
+        onView(withId(R.id.drawer_layout))
+            .check(matches(isClosed(Gravity.LEFT)))
+            .perform(DrawerActions.open())
+        onView(withId(R.id.nav_view))
+            .perform(NavigationViewActions.navigateTo(R.id.nav_search))
+
+        onView(withId(R.id.recyclerViewSearch)).check(matches(isDisplayed()))
     }
 
 }

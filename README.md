@@ -42,7 +42,7 @@
 - Dagger2 for Dependency Injection
   - Use of abstraction to handle references to components required by other components
   (see BaseActivity/BaseFragment)
-
+- Picasso for loading images
 - Retrofit2 for network calls
 - Espresso for UI tests
 - Mockito-Kotlin for Unit tests

@@ -12,6 +12,7 @@ import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.data.models.BoardGameData
 import com.jonathanl.bgmanager.databinding.FragmentGameDetailsBinding
 import com.jonathanl.bgmanager.di.DaggerBoardGameDetailsComponent
+import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -51,8 +52,13 @@ class BoardGameDetailsFragment : BaseFragment() {
     }
 
     private fun initialiseGameData(boardGameData: BoardGameData) {
-        Log.d("BGameDetailsFragment", "initialiseGameData = $boardGameData")
+        //Log.d("BGameDetailsFragment", "initialiseGameData = $boardGameData")
         binding.run {
+            Picasso.get()
+                .load(boardGameData.bgImage)
+                .placeholder(R.drawable.ic_loading)
+                .error(R.drawable.ic_error)
+                .into(gameImage)
             gamePublishYearText.text = getString(R.string.bg_details_yearpublished, boardGameData.yearPublished)
             gameMinMaxPlayersText.text = getString(R.string.bg_details_minmaxplayers, boardGameData.minPlayers, boardGameData.maxPlayers)
             gameMinMaxPlayTimeText.text = getString(R.string.bg_details_minmaxplaytime, boardGameData.minPlayTime, boardGameData.maxPlayTime)
