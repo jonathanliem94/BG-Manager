@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
-import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
+import com.jonathanl.bgmanager.data.models.GameListEntry
 import kotlinx.android.synthetic.main.recycler_gamelist_view.view.*
 
-class GameListViewAdapter(private val gameListDragListener: GameListDragListener):
+class GameListViewAdapter(
+    private val gameListDragListener: GameListDragListener,
+    private val gameListViewModel: GameListViewModel
+    ):
     ListAdapter<GameListEntry, GameListViewAdapter.GameListViewHolder>(GameListResultDiffCallback()) {
 
     private var entryList = mutableListOf<GameListEntry>()
@@ -65,10 +68,12 @@ class GameListViewAdapter(private val gameListDragListener: GameListDragListener
         val entryToBeShifted = entryList.removeAt(itemFromPos)
         entryList.add(itemToPos, entryToBeShifted)
         notifyItemMoved(itemFromPos, itemToPos)
+        gameListViewModel.saveGameListToDb(entryList)
     }
 
     fun removeEntryOnSwipe(position: Int){
-        entryList.removeAt(position)
+        val removedItem = entryList.removeAt(position)
         notifyItemRemoved(position)
+        gameListViewModel.removeGameEntryFromDb(removedItem)
     }
 }

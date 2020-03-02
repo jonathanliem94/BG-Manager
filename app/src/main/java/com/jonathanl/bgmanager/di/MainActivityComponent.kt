@@ -1,12 +1,17 @@
 package com.jonathanl.bgmanager.di
 
+import android.content.Context
 import com.jonathanl.bgmanager.MainActivity
 import com.jonathanl.bgmanager.MainActivityViewModel
+import com.jonathanl.bgmanager.data.GameListDbService
 import com.jonathanl.bgmanager.data.NetworkService
+import com.jonathanl.bgmanager.data.Repository
+import com.jonathanl.bgmanager.data.RepositoryImpl
 import com.jonathanl.bgmanager.useCases.GameListUseCase
 import com.jonathanl.bgmanager.useCases.GameListUseCaseImpl
 import com.jonathanl.bgmanager.useCases.NetworkUseCase
 import com.jonathanl.bgmanager.useCases.NetworkUseCaseImpl
+import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -24,11 +29,12 @@ interface MainActivityComponent {
     fun provideNetworkUseCase(): NetworkUseCase
     fun provideGameListUseCase(): GameListUseCase
 
-    /* No need for builder for now, as the component has no dependencies
     @Component.Builder
-    interface MainAppComponentBuilder{
+    interface MainActivityComponentBuilder{
+        @BindsInstance
+        fun context(context: Context): MainActivityComponentBuilder
         fun build(): MainActivityComponent
-    }*/
+    }
 
 }
 
@@ -37,18 +43,31 @@ object MainActivityModule {
 
     @Provides
     @ActivityScope
+    fun provideRepository(
+        networkService: NetworkService,
+        gameListDbService: GameListDbService
+    ): Repository =
+        RepositoryImpl(gameListDbService, networkService)
+
+    @Provides
+    @ActivityScope
+    fun provideGameListDbService(context: Context): GameListDbService =
+        GameListDbService.createDatabaseAccessService(context)
+
+    @Provides
+    @ActivityScope
     fun provideNetworkService(): NetworkService =
         NetworkService.createNetworkService()
 
     @Provides
     @ActivityScope
-    fun provideGameListUseCase(): GameListUseCase =
-        GameListUseCaseImpl()
+    fun provideGameListUseCase(repository: Repository): GameListUseCase =
+        GameListUseCaseImpl(repository)
 
     @Provides
     @ActivityScope
-    fun provideNetworkUseCase(networkService: NetworkService): NetworkUseCase =
-        NetworkUseCaseImpl(networkService)
+    fun provideNetworkUseCase(repository: Repository): NetworkUseCase =
+        NetworkUseCaseImpl(repository)
 
     @Provides
     @ActivityScope

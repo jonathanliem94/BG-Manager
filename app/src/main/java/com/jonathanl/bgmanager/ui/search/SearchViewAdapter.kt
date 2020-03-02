@@ -11,32 +11,32 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
-import com.jonathanl.bgmanager.data.models.BoardGameResult
+import com.jonathanl.bgmanager.data.models.BoardGameSearchId
 import kotlinx.android.synthetic.main.recycler_search_view.view.*
 
 class SearchViewAdapter(private val searchViewModel: SearchViewModel):
-    ListAdapter<BoardGameResult, SearchViewAdapter.SearchViewHolder>(BoardGameResultDiffCallback()) {
+    ListAdapter<BoardGameSearchId, SearchViewAdapter.SearchViewHolder>(BoardGameResultDiffCallback()) {
 
     // Provide itemcallback to allow DiffUtil to determine what is different from the old and new items
-    class BoardGameResultDiffCallback : DiffUtil.ItemCallback<BoardGameResult>() {
-        override fun areContentsTheSame(oldItem: BoardGameResult, newItem: BoardGameResult): Boolean {
+    class BoardGameResultDiffCallback : DiffUtil.ItemCallback<BoardGameSearchId>() {
+        override fun areContentsTheSame(oldItem: BoardGameSearchId, newItem: BoardGameSearchId): Boolean {
             return ((oldItem.gameId == newItem.gameId)&&
-                    (oldItem.boardGameNameResult.gameName == newItem.boardGameNameResult.gameName))
+                    (oldItem.boardGameSearchNameResult.gameName == newItem.boardGameSearchNameResult.gameName))
         }
 
-        override fun areItemsTheSame(oldItem: BoardGameResult, newItem: BoardGameResult): Boolean {
+        override fun areItemsTheSame(oldItem: BoardGameSearchId, newItem: BoardGameSearchId): Boolean {
             return (oldItem.gameId == newItem.gameId)
         }
     }
 
     // ViewHolder for each data item
     class SearchViewHolder(private val cardView: CardView): RecyclerView.ViewHolder(cardView){
-        internal fun bind(boardGameResult: BoardGameResult, searchViewModel: SearchViewModel){
+        internal fun bind(boardGameSearchId: BoardGameSearchId, searchViewModel: SearchViewModel){
             val activity = cardView.context as Activity
             cardView.apply {
                 search_result_image.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_launcher_background))
-                search_result_text.text = boardGameResult.boardGameNameResult.gameName
-                search_result_game_id.text = boardGameResult.gameId
+                search_result_text.text = boardGameSearchId.boardGameSearchNameResult.gameName
+                search_result_game_id.text = boardGameSearchId.gameId
                 search_result_gotodetails_img.setOnClickListener(SearchViewOnClickMoreDetails())
                 search_result_addtogamelist_img.setOnClickListener(SearchViewOnClickAddToGameList(searchViewModel))
             }

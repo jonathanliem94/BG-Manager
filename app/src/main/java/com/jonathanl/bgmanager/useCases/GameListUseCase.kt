@@ -1,31 +1,36 @@
 package com.jonathanl.bgmanager.useCases
 
-import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
+import com.jonathanl.bgmanager.data.Repository
+import com.jonathanl.bgmanager.data.models.GameListEntry
+import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
 
 interface GameListUseCase {
 
     val gameListHolder: Observable<MutableList<GameListEntry>>
+    fun handleNewGameEntry(newGameListEntry: GameListEntry): Completable
+    fun saveGameListToDB(gameList: MutableList<GameListEntry>): Completable
+    fun removeGameEntryToDb(gameListEntry: GameListEntry): Completable
 
-    fun handleNewGameEntry(newGameListEntry: GameListEntry)
 }
 
-class GameListUseCaseImpl: GameListUseCase {
+class GameListUseCaseImpl(
+    private val repository: Repository
+): GameListUseCase {
 
     // Game List Observable
-    private val gameListBehavior: BehaviorSubject<MutableList<GameListEntry>> = BehaviorSubject.create()
-    override val gameListHolder: Observable<MutableList<GameListEntry>> = gameListBehavior.hide()
+    override val gameListHolder: Observable<MutableList<GameListEntry>> = repository.getGameListEntries()
 
-    override fun handleNewGameEntry(newGameListEntry: GameListEntry) {
-        val gameList = gameListBehavior.value ?: mutableListOf()
-        if (gameList.contains(newGameListEntry)) {
-            return
-        }
-        else{
-            gameList.add(newGameListEntry)
-            gameListBehavior.onNext(gameList)
-        }
+    override fun handleNewGameEntry(newGameListEntry: GameListEntry): Completable {
+        return repository.insertSingleGameListEntry(newGameListEntry)
+    }
+
+    override fun saveGameListToDB(gameList: MutableList<GameListEntry>): Completable {
+        return repository.saveGameListToDB(gameList)
+    }
+
+    override fun removeGameEntryToDb(gameListEntry: GameListEntry): Completable {
+        return repository.removeGameEntryToDb(gameListEntry)
     }
 
 }

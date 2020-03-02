@@ -10,14 +10,14 @@ import org.simpleframework.xml.Root
 @Root(name = "items", strict = false)
 data class BoardGameSearchResults(
     @field:Attribute(name = "total") var total: String = "",
-    @field:ElementList(name = "item", inline = true, required = false) var resultsArray: List<BoardGameResult> = arrayListOf())
+    @field:ElementList(name = "item", inline = true, required = false) var resultsArray: List<BoardGameSearchId> = arrayListOf())
 
 @Root(name = "item", strict = false)
-data class BoardGameResult(
+data class BoardGameSearchId(
     @field:Attribute(name = "id") var gameId: String = "",
-    @field:Element(name = "name") var boardGameNameResult: BoardGameName = BoardGameName()
+    @field:Element(name = "name") var boardGameSearchNameResult: BoardGameSearchName = BoardGameSearchName()
 )
 
 @Root(name = "name", strict = false)
-data class BoardGameName(
+data class BoardGameSearchName(
     @field:Attribute(name = "value") var gameName: String = "")

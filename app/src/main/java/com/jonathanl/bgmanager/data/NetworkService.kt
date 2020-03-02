@@ -1,6 +1,6 @@
 package com.jonathanl.bgmanager.data
 
-import com.jonathanl.bgmanager.data.models.BoardGameInfo
+import com.jonathanl.bgmanager.data.models.BoardGameDetailsHolder
 import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
 import io.reactivex.Single
 import retrofit2.Retrofit
@@ -27,7 +27,7 @@ interface NetworkService {
         @Path("gameId") gameId: String,
         @Query("stats") stats: String = "0",
         @Query("historical") playStats: String = "0"
-    ): Single<BoardGameInfo>
+    ): Single<BoardGameDetailsHolder>
 
     companion object {
         fun createNetworkService(): NetworkService {

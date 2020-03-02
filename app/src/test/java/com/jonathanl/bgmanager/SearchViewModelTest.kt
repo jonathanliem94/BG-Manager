@@ -1,13 +1,11 @@
 package com.jonathanl.bgmanager
 
-import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
+import com.jonathanl.bgmanager.data.models.GameListEntry
 import com.jonathanl.bgmanager.ui.search.SearchViewModel
 import com.jonathanl.bgmanager.useCases.GameListUseCase
 import com.jonathanl.bgmanager.useCases.NetworkUseCase
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
+import io.reactivex.Completable
 import org.junit.Test
 
 class SearchViewModelTest {
@@ -18,6 +16,7 @@ class SearchViewModelTest {
 
     @Test
     fun `when a gameEntry is to be added, the gameEntry will be passed on to the gameListUseCase`() {
+        whenever(gameListUseCase.handleNewGameEntry(any())).thenReturn(Completable.complete())
         val testGameListEntry =
             GameListEntry(
                 "test",

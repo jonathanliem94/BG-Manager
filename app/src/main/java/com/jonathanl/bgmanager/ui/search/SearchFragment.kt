@@ -11,7 +11,6 @@ import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
 import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
 import com.jonathanl.bgmanager.di.DaggerSearchComponent
-import com.jonathanl.bgmanager.useCases.SEARCH_START
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -54,7 +53,7 @@ class SearchFragment : BaseFragment() {
         }
 
         setUpInitialUI()
-        compositeDisposable.addAll(subscribeToSearchResults(), subscribeToSearchStatus())
+        compositeDisposable.addAll(subscribeToSearchResults())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -69,6 +68,7 @@ class SearchFragment : BaseFragment() {
 
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     searchViewModel.conductBoardGameSearch(query)
+                    setVisibilityDuringSearch()
                     //ensure focus on search bar is lost after a search
                     this@apply.clearFocus()
                     return true
@@ -88,20 +88,6 @@ class SearchFragment : BaseFragment() {
                 },
                 onError = {
                     Log.e("SearchFragment", "subscribe to search results failed, $it")
-                }
-            )
-    }
-
-    private fun subscribeToSearchStatus(): Disposable {
-        return searchViewModel.boardGameSearchStatus
-            .subscribeBy (
-                onNext = {
-                    when (it) {
-                        SEARCH_START -> setVisibilityDuringSearch()
-                    }
-                },
-                onError = {
-                    Log.e("SearchViewModel", "subscribeToSearchStatus failed. $it")
                 }
             )
     }

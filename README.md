@@ -11,29 +11,29 @@
 - Main Activity
   - Is a navigation drawer layout
   - Contains navigation host fragment
-  - Toolbar only has a search view (for now)
 
 - Search Fragment
   - Contains RecyclerView with ListAdapter
   - Clicking a result will navigate to a new fragment
   - ~~Layout file uses data-binding for modifying visibility~~
   - Uses view-binding to modify UI states
-  - ViewModel uses `ObservableField`
     
 - GameList Fragment
-  - ViewModel uses `LiveData`
+  - ~~ViewModel uses `LiveData`~~
+  - Uses Rx to observe data in the Room database
 
 - BoardGameDetails Fragment
   - ~~Uses `findViewById` to set UI~~
   - Uses view-binding to modify UI
+  - Picasso to load images
   - NestedScroll View for games with excessive details
 
 - GameListUseCase
-  - Handles gameList operations and emits GameList using `BehaviorSubject`
+  - Handles gameList operations
 
 - NetworkUseCase
-  - Handles all network calls (currently only: Search) and emits the results
-  and searchStatus through `BehaviorSubject` and `PublishSubject` respectively
+  - Handles all network calls and emits the results
+ through `BehaviorSubject`
 
 ## Important Dependencies
 
@@ -46,3 +46,4 @@
 - Retrofit2 for network calls
 - Espresso for UI tests
 - Mockito-Kotlin for Unit tests
+- Room for saving local data (in this case, BoardGameList)

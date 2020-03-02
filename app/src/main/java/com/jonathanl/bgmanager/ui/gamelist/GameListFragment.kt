@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.databinding.FragmentGameListBinding
 import com.jonathanl.bgmanager.di.DaggerGameListComponent
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -40,7 +41,7 @@ class GameListFragment : BaseFragment(), GameListDragListener {
         super.onViewCreated(view, savedInstanceState)
 
         // RecyclerView stuff
-        val gameListAdapter = GameListViewAdapter(this)
+        val gameListAdapter = GameListViewAdapter(this, gameListViewModel)
         val gestureCallback = GameListGestureCallback(gameListAdapter)
         itemTouchHelper = ItemTouchHelper(gestureCallback)
         binding.recyclerViewGameList.apply {
@@ -51,13 +52,14 @@ class GameListFragment : BaseFragment(), GameListDragListener {
         }
         // Attach gesture functionality (swipe and drag and drop) to recycler view
         itemTouchHelper.attachToRecyclerView(binding.recyclerViewGameList)
-        compositeDisposable.addAll(subscribeToGameListHolder())
+        compositeDisposable.add(subscribeToGameListHolder())
     }
 
     private fun subscribeToGameListHolder(): Disposable{
         return gameListViewModel.gameListHolder
             .distinctUntilChanged()
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy (
                 onNext = {
                     (binding.recyclerViewGameList.adapter as GameListViewAdapter).submitList(it)

@@ -7,12 +7,12 @@ import org.simpleframework.xml.Root
 /* XML unmarshalling for  Get Boardgame Info Request */
 
 @Root(name = "boardgames", strict = false)
-data class BoardGameInfo(
-    @field:Element(name = "boardgame") var boardGameData: BoardGameData = BoardGameData()
+data class BoardGameDetailsHolder(
+    @field:Element(name = "boardgame") var boardGameDetails: BoardGameDetails = BoardGameDetails()
 )
 
 @Root(name = "boardgame", strict = false)
-data class BoardGameData(
+data class BoardGameDetails(
     @field:Element(name = "yearpublished") var yearPublished: String? = null,
     @field:Element(name = "minplayers") var minPlayers: String? = null,
     @field:Element(name = "maxplayers") var maxPlayers: String? = null,

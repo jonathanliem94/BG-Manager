@@ -1,12 +1,11 @@
 package com.jonathanl.bgmanager
 
+import com.jonathanl.bgmanager.data.models.GameListEntry
 import com.jonathanl.bgmanager.ui.boardgamedetails.BoardGameDetailsViewModel
-import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
 import com.jonathanl.bgmanager.useCases.GameListUseCase
 import com.jonathanl.bgmanager.useCases.NetworkUseCase
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.*
+import io.reactivex.Completable
 import org.junit.Test
 
 class BoardGameDetailsViewModelTest {
@@ -31,9 +30,15 @@ class BoardGameDetailsViewModelTest {
 
     @Test
     fun `if game data is valid, adding to the game list will be invoked`() {
+        whenever(gameListUseCase.handleNewGameEntry(any())).thenReturn(Completable.complete())
         val testName = "testGame"
         boardGameDetailsViewModelUnderTest.addToGameList(testName, testId)
-        verify(gameListUseCase).handleNewGameEntry(GameListEntry(testName,testId))
+        verify(gameListUseCase).handleNewGameEntry(
+            GameListEntry(
+                testName,
+                testId
+            )
+        )
     }
 
 }

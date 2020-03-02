@@ -67,6 +67,11 @@ android {
 
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
+        }
     }
     viewBinding {
         enabled = true
@@ -96,8 +101,9 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.fragment:fragment-ktx:1.2.2'
-
-    // Picasso
+    implementation 'androidx.room:room-runtime:2.2.4'
+    kapt 'androidx.room:room-compiler:2.2.4'
+    implementation 'androidx.room:room-rxjava2:2.2.4'
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     // Material Design

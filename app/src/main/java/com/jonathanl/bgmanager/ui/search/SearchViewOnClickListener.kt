@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.navigation.findNavController
-import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
+import com.jonathanl.bgmanager.data.models.GameListEntry
 import kotlinx.android.synthetic.main.recycler_search_view.view.*
 
 interface SearchViewOnClickListener: View.OnClickListener

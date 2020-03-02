@@ -7,7 +7,9 @@ import com.jonathanl.bgmanager.di.MainActivityComponent
 abstract class BaseActivity: AppCompatActivity() {
 
     private val component by lazy {
-        DaggerMainActivityComponent.create()
+        DaggerMainActivityComponent.builder()
+            .context(baseContext)
+            .build()
     }
 
     fun getMainActivityComponent(): MainActivityComponent = component

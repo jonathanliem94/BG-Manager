@@ -1,43 +1,35 @@
 package com.jonathanl.bgmanager.useCases
 
-import com.jonathanl.bgmanager.ui.gamelist.models.GameListEntry
+import com.jonathanl.bgmanager.data.Repository
+import com.jonathanl.bgmanager.data.models.GameListEntry
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Test
 
 class GameListUseCaseTest {
 
-    private var gameListUseCaseUnderTest: GameListUseCase = GameListUseCaseImpl()
+    private val repository: Repository = mock()
+    private var gameListUseCaseUnderTest: GameListUseCase = GameListUseCaseImpl(repository)
 
     @Test
-    fun `when a duplicate game entry is inputted, the game list should not change`() {
-        val entry = GameListEntry(
-            "test",
-            "123"
-        )
-
-        repeat(2) {
-            gameListUseCaseUnderTest.handleNewGameEntry(entry)
-        }
-
-        gameListUseCaseUnderTest.gameListHolder.test()
-            .assertValue(mutableListOf(entry))
+    fun `when a game entry is added, ensure the repository adds it to the DB`() {
+        val testEntry = GameListEntry("123", "test")
+        gameListUseCaseUnderTest.handleNewGameEntry(testEntry)
+        verify(repository).insertSingleGameListEntry(testEntry)
     }
 
     @Test
-    fun `when a new game entry is inputted, the new game will be added to the game list`() {
-        val entry1 = GameListEntry(
-            "test",
-            "123"
-        )
-        val entry2 = GameListEntry(
-            "hello",
-            "456"
-        )
+    fun `when saving the game list, ensure the repository makes the correct call`() {
+        val testGameList = mutableListOf(GameListEntry("456", "mock"))
+        gameListUseCaseUnderTest.saveGameListToDB(testGameList)
+        verify(repository).saveGameListToDB(testGameList)
+    }
 
-        gameListUseCaseUnderTest.handleNewGameEntry(entry1)
-        gameListUseCaseUnderTest.handleNewGameEntry(entry2)
-
-        gameListUseCaseUnderTest.gameListHolder.test()
-            .assertValue(mutableListOf(entry1, entry2))
+    @Test
+    fun `when a game entry is removed, ensure the repository removes it from the DB`() {
+        val testEntry = GameListEntry("123", "test")
+        gameListUseCaseUnderTest.removeGameEntryToDb(testEntry)
+        verify(repository).removeGameEntryToDb(testEntry)
     }
 
 }

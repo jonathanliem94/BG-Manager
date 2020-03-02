@@ -8,13 +8,14 @@ import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.base.BaseFragment
-import com.jonathanl.bgmanager.data.models.BoardGameData
+import com.jonathanl.bgmanager.data.models.BoardGameDetails
 import com.jonathanl.bgmanager.databinding.FragmentGameDetailsBinding
 import com.jonathanl.bgmanager.di.DaggerBoardGameDetailsComponent
 import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class BoardGameDetailsFragment : BaseFragment() {
@@ -34,7 +35,7 @@ class BoardGameDetailsFragment : BaseFragment() {
         setHasOptionsMenu(true)
         setUpDI()
         _binding = FragmentGameDetailsBinding.inflate(inflater, container, false)
-        initialiseUI()
+        disposable = subscribeToBoardGameDetails()
         return binding.root
     }
 
@@ -61,11 +62,12 @@ class BoardGameDetailsFragment : BaseFragment() {
     }
 
     private fun subscribeToBoardGameDetails(): Disposable {
-        return boardGameDetailsViewModel.boardGameDetails
+        return boardGameDetailsViewModel.getBoardGameDetails(args.gameId)
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy (
-                onNext = {
-                    initialiseGameData(it.boardGameData)
+                onSuccess = {
+                    initialiseGameData(it.boardGameDetails)
                 },
                 onError = {
                     Log.e("BGameDetailsFragment", "subscribeToBoardGameDetails failed. $it")
@@ -73,27 +75,20 @@ class BoardGameDetailsFragment : BaseFragment() {
             )
     }
 
-    private fun initialiseGameData(boardGameData: BoardGameData) {
+    private fun initialiseGameData(boardGameDetails: BoardGameDetails) {
         //Log.d("BGameDetailsFragment", "initialiseGameData = $boardGameData")
         binding.run {
             Picasso.get()
-                .load(boardGameData.bgImage)
+                .load(boardGameDetails.bgImage)
                 .placeholder(R.drawable.ic_loading)
                 .error(R.drawable.ic_error)
                 .into(gameImage)
-            gamePublishYearText.text = getString(R.string.bg_details_yearpublished, boardGameData.yearPublished)
-            gameMinMaxPlayersText.text = getString(R.string.bg_details_minmaxplayers, boardGameData.minPlayers, boardGameData.maxPlayers)
-            gameMinMaxPlayTimeText.text = getString(R.string.bg_details_minmaxplaytime, boardGameData.minPlayTime, boardGameData.maxPlayTime)
-            gameDescriptionText.text = Html.fromHtml(boardGameData.description)
-        }
-    }
-
-    private fun initialiseUI() {
-        disposable = subscribeToBoardGameDetails()
-        boardGameDetailsViewModel.getBoardGameDetails(args.gameId)
-        binding.run {
             gameNameText.text = args.gameName
             gameIdText.text = args.gameId
+            gamePublishYearText.text = getString(R.string.bg_details_yearpublished, boardGameDetails.yearPublished)
+            gameMinMaxPlayersText.text = getString(R.string.bg_details_minmaxplayers, boardGameDetails.minPlayers, boardGameDetails.maxPlayers)
+            gameMinMaxPlayTimeText.text = getString(R.string.bg_details_minmaxplaytime, boardGameDetails.minPlayTime, boardGameDetails.maxPlayTime)
+            gameDescriptionText.text = Html.fromHtml(boardGameDetails.description)
         }
     }
 
