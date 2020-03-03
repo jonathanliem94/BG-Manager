@@ -6,6 +6,7 @@ import com.jonathanl.bgmanager.useCases.GameListUseCase
 import com.jonathanl.bgmanager.useCases.NetworkUseCase
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
+import io.reactivex.disposables.Disposables
 import org.junit.Test
 
 class SearchViewModelTest {
@@ -34,6 +35,7 @@ class SearchViewModelTest {
 
     @Test
     fun `when search query is valid, there will be an invocation to conduct a search`() {
+        whenever(networkUseCase.onSubmitQueryForBoardGameSearch(any())).thenReturn(Disposables.empty())
         val testSearchQuery = "test123"
         searchViewModelUnderTest.conductBoardGameSearch(testSearchQuery)
         verify(networkUseCase).onSubmitQueryForBoardGameSearch(testSearchQuery)

@@ -33,7 +33,9 @@ class SearchViewModel(
 
     fun conductBoardGameSearch(searchQuery: String?) {
         if (searchQuery?.isNotBlank() == true) {
-            networkUseCase.onSubmitQueryForBoardGameSearch(searchQuery)
+            compositeDisposable.add(
+                networkUseCase.onSubmitQueryForBoardGameSearch(searchQuery)
+            )
         }
     }
 

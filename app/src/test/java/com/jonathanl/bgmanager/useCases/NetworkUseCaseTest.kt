@@ -36,9 +36,11 @@ class NetworkUseCaseTest {
             .thenReturn(Single.just(fakeSearchResult))
         val testObservableSearchResult = networkUseCaseUnderTest.boardGameSearchResults.test()
 
-        networkUseCaseUnderTest.onSubmitQueryForBoardGameSearch(testSearchQuery)
+        val disposable = networkUseCaseUnderTest.onSubmitQueryForBoardGameSearch(testSearchQuery)
 
         testObservableSearchResult.awaitCount(1).assertValue(fakeSearchResult)
+
+        disposable.dispose()
     }
 
     @Test

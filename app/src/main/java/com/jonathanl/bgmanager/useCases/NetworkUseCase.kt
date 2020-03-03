@@ -6,6 +6,7 @@ import com.jonathanl.bgmanager.data.models.BoardGameDetailsHolder
 import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -16,7 +17,7 @@ interface  NetworkUseCase {
 
     val boardGameSearchResults: Observable<BoardGameSearchResults>
 
-    fun onSubmitQueryForBoardGameSearch(searchQuery: String)
+    fun onSubmitQueryForBoardGameSearch(searchQuery: String): Disposable
     fun onSubmitQueryForBoardGameDetails(gameId: String): Single<BoardGameDetailsHolder>
 
 }
@@ -29,8 +30,8 @@ class NetworkUseCaseImpl(
     private val boardGameSearchResultsBehaviour: BehaviorSubject<BoardGameSearchResults> = BehaviorSubject.create()
     override val boardGameSearchResults: Observable<BoardGameSearchResults> = boardGameSearchResultsBehaviour.hide()
 
-    override fun onSubmitQueryForBoardGameSearch(searchQuery: String) {
-        val disposable = repository.getBoardGameSearchResults(searchQuery)
+    override fun onSubmitQueryForBoardGameSearch(searchQuery: String): Disposable {
+         return repository.getBoardGameSearchResults(searchQuery)
             .subscribeOn(Schedulers.io())
             .subscribeBy (
                 onSuccess = {
