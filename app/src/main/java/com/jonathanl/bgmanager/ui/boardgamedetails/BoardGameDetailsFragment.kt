@@ -1,17 +1,23 @@
 package com.jonathanl.bgmanager.ui.boardgamedetails
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.data.models.BoardGameDetails
 import com.jonathanl.bgmanager.databinding.FragmentGameDetailsBinding
 import com.jonathanl.bgmanager.di.DaggerBoardGameDetailsComponent
-import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -67,7 +73,7 @@ class BoardGameDetailsFragment : BaseFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy (
                 onSuccess = {
-                    initialiseGameData(it.boardGameDetails)
+                    initialiseGameImage(it.boardGameDetails)
                 },
                 onError = {
                     Log.e("BGameDetailsFragment", "subscribeToBoardGameDetails failed. $it")
@@ -75,14 +81,43 @@ class BoardGameDetailsFragment : BaseFragment() {
             )
     }
 
+    private fun initialiseGameImage(boardGameDetails: BoardGameDetails) {
+        Glide.with(binding.root)
+            .load(boardGameDetails.bgImage)
+            .placeholder(R.drawable.ic_loading)
+            .error(R.drawable.ic_error)
+            .listener(object: RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Log.e("BGameDetailsFragment", "(Glide) Image failed to load. $e")
+                    binding.gameImage.visibility = View.GONE
+                    initialiseGameData(boardGameDetails)
+                    return true
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    initialiseGameData(boardGameDetails)
+                    // to allow glide to update the target
+                    return false
+                }
+            })
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(binding.gameImage)
+    }
+
     private fun initialiseGameData(boardGameDetails: BoardGameDetails) {
         //Log.d("BGameDetailsFragment", "initialiseGameData = $boardGameData")
         binding.run {
-            Picasso.get()
-                .load(boardGameDetails.bgImage)
-                .placeholder(R.drawable.ic_loading)
-                .error(R.drawable.ic_error)
-                .into(gameImage)
             gameNameText.text = args.gameName
             gameIdText.text = args.gameId
             gamePublishYearText.text = getString(R.string.bg_details_yearpublished, boardGameDetails.yearPublished)
