@@ -11,8 +11,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 
-const val SEARCH_START = 1
-
 interface  NetworkUseCase {
 
     val boardGameSearchResults: Observable<BoardGameSearchResults>
