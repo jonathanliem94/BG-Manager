@@ -6,6 +6,28 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/gameListFilterText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/filter_text"
+        app:layout_constraintBottom_toTopOf="@id/gameListChipGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/gameListChipGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:singleSelection="true"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewGameList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameListFilterText" />
+
+    <TextView
         android:id="@+id/gameListText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,6 +37,7 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:text="@string/bg_list_empty"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -29,6 +52,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameListChipGroup"
         tools:listitem="@layout/recycler_gamelist_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

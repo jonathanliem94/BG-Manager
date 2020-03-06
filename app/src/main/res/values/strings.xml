@@ -31,6 +31,11 @@
     <!-- BoardGame List Fragment -->
     <string name="bg_list_empty">Your list is empty</string>
 
+    <!-- BoardGame List filter tags -->
+    <string name="filter_text">Filter by:</string>
+    <string name="filter_name_ascending">Name: Ascending</string>
+    <string name="filter_name_descending">Name: Descending</string>
+
     <!-- BoardGame Details Fragment -->
     <string name="bg_details_minmaxplayers">No. of Players: %1$s to %2$s</string>
     <string name="bg_details_minmaxplaytime">Playtime (minutes): %1$s to %2$s</string>

@@ -64,16 +64,34 @@ class GameListViewAdapter(
         holder.bind(getItem(position), gameListDragListener)
     }
 
+    fun saveListToDb() {
+        gameListViewModel.saveGameListToDb(entryList)
+    }
+
     fun insertEntryOnDrag(itemFromPos: Int, itemToPos: Int){
         val entryToBeShifted = entryList.removeAt(itemFromPos)
         entryList.add(itemToPos, entryToBeShifted)
         notifyItemMoved(itemFromPos, itemToPos)
-        gameListViewModel.saveGameListToDb(entryList)
+        saveListToDb()
     }
 
     fun removeEntryOnSwipe(position: Int){
         val removedItem = entryList.removeAt(position)
         notifyItemRemoved(position)
         gameListViewModel.removeGameEntryFromDb(removedItem)
+    }
+
+    fun sortGameListAscending() {
+        entryList.sortBy {
+            it.gameName
+        }
+        notifyDataSetChanged()
+    }
+
+    fun sortGameListDescending() {
+        entryList.sortByDescending {
+            it.gameName
+        }
+        notifyDataSetChanged()
     }
 }
