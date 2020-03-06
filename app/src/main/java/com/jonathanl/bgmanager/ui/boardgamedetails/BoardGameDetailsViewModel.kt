@@ -25,8 +25,8 @@ class BoardGameDetailsViewModel(
     fun addToGameList(gameName: String, gameId: String) {
         if (gameName.isNotBlank()) {
             val newGameEntry = GameListEntry(
-                gameName,
-                gameId
+                gameId,
+                gameName
             )
             addNewEntryToGameList(newGameEntry)
         }

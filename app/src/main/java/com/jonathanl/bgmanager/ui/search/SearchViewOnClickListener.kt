@@ -41,8 +41,8 @@ class SearchViewOnClickAddToGameList(private val searchViewModel: SearchViewMode
                 (v.parent.parent as CardView).apply {
                     val newGameListEntry =
                         GameListEntry(
-                            search_result_text.text.toString(),
-                            search_result_game_id.text.toString()
+                            search_result_game_id.text.toString(),
+                            search_result_text.text.toString()
                         )
                     searchViewModel.addNewEntryToGameList(newGameListEntry)
                 }

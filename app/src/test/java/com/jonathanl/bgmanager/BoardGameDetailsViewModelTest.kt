@@ -35,8 +35,8 @@ class BoardGameDetailsViewModelTest {
         boardGameDetailsViewModelUnderTest.addToGameList(testName, testId)
         verify(gameListUseCase).handleNewGameEntry(
             GameListEntry(
-                testName,
-                testId
+                testId,
+                testName
             )
         )
     }
