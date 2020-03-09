@@ -24,6 +24,7 @@
 
 - BoardGameDetails Fragment
   - ~~Uses `findViewById` to set UI~~
+  - Chips for categories to filter the list
   - Uses view-binding to modify UI
   - NestedScroll View for games with excessive details
 

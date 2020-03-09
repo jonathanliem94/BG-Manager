@@ -2,10 +2,8 @@ package com.jonathanl.bgmanager.ui.gamelist
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.view.View.NO_ID
-import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,15 +13,21 @@ import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.databinding.FragmentGameListBinding
 import com.jonathanl.bgmanager.di.DaggerGameListComponent
+import com.jonathanl.bgmanager.ui.gamelist.dialogs.AddCategoryDialogFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.lang.ClassCastException
 import javax.inject.Inject
 
-class GameListFragment : BaseFragment(), GameListDragListener, ChipGroup.OnCheckedChangeListener {
-
+class GameListFragment :
+    BaseFragment(),
+    GameListDragListener,
+    ChipGroup.OnCheckedChangeListener,
+    AddCategoryDialogFragment.AddCategoryDialogListener
+{
     @Inject
     lateinit var gameListViewModel: GameListViewModel
     private var _binding: FragmentGameListBinding? = null
@@ -39,6 +43,7 @@ class GameListFragment : BaseFragment(), GameListDragListener, ChipGroup.OnCheck
     ): View? {
         setUpDI()
         _binding = FragmentGameListBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -62,6 +67,25 @@ class GameListFragment : BaseFragment(), GameListDragListener, ChipGroup.OnCheck
         compositeDisposable.add(subscribeToGameListHolder())
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.options_menu_game_details, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_category_option -> {
+                val dialog = AddCategoryDialogFragment(this)
+                dialog.show(parentFragmentManager, "addCategory")
+                true
+            }
+            R.id.filter_custom -> {
+                //TODO: Add dialog to select and set multiple filters
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun initChipGroup() {
         val chipSortNameAscending = createTemplateChip()
         chipSortNameAscending.text = getString(R.string.filter_name_ascending)
@@ -73,8 +97,39 @@ class GameListFragment : BaseFragment(), GameListDragListener, ChipGroup.OnCheck
         }
     }
 
+    private fun createAndAddCustomChip(filterText: String) {
+        val newChip = createTemplateChip()
+        newChip.text = filterText
+        newChip.isCloseIconVisible = true
+        newChip.setOnCloseIconClickListener {
+            try {
+                val chipGroup = it.parent as ChipGroup
+                chipGroup.removeView(it)
+            } catch (e: ClassCastException) {
+                throw ClassCastException((context.toString() +
+                        "Parent of chip is not ChipGroup???"))
+            }
+        }
+        binding.gameListChipGroup.addView(newChip)
+    }
+
     private fun createTemplateChip(): Chip {
         return layoutInflater.inflate(R.layout.chip_gamelist, binding.gameListChipGroup, false) as Chip
+    }
+
+    override fun onCheckedChanged(group: ChipGroup?, checkedId: Int) {
+        if (checkedId != NO_ID) {
+            val chipSelected = group?.findViewById<Chip>(checkedId)
+            when (chipSelected?.text) {
+                getString(R.string.filter_name_descending) -> gameListAdapter.sortGameListDescending()
+                getString(R.string.filter_name_ascending) -> gameListAdapter.sortGameListAscending()
+                //TODO: for custom chips, sort by that indicated tag
+            }
+        }
+    }
+
+    override fun onDialogPositiveClick(filterText: String) {
+        createAndAddCustomChip(filterText)
     }
 
     private fun subscribeToGameListHolder(): Disposable{
@@ -90,16 +145,6 @@ class GameListFragment : BaseFragment(), GameListDragListener, ChipGroup.OnCheck
                     Log.e("GameListFragment", "subscribeToGameListObservable failed. $it")
                 }
             )
-    }
-
-    override fun onCheckedChanged(group: ChipGroup?, checkedId: Int) {
-        if (checkedId != NO_ID) {
-            val chipSelected = group?.findViewById<Chip>(checkedId)
-            when (chipSelected?.text) {
-                getString(R.string.filter_name_descending) -> gameListAdapter.sortGameListDescending()
-                getString(R.string.filter_name_ascending) -> gameListAdapter.sortGameListAscending()
-            }
-        }
     }
 
     private fun setUpDI() {

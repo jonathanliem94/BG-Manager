@@ -52,7 +52,7 @@ class BoardGameDetailsFragment : BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.add_game_option -> {
+            R.id.add_category_option -> {
                 binding.run {
                     boardGameDetailsViewModel.addToGameList(
                         gameNameText.text.toString(),

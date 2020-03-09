@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <item
-        android:id="@+id/add_game_option"
-        android:title="@string/search_option"
+        android:id="@+id/filter_custom"
+        android:title="@string/filter_option"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/add_category_option"
+        android:title="@string/add_option"
         android:icon="@drawable/ic_add"
         app:showAsAction="ifRoom" />
 </menu>
