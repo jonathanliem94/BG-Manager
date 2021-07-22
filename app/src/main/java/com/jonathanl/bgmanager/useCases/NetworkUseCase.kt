@@ -1,7 +1,7 @@
 package com.jonathanl.bgmanager.useCases
 
 import android.util.Log
-import com.jonathanl.bgmanager.data.Repository
+import com.jonathanl.bgmanager.data.BGGRepository
 import com.jonathanl.bgmanager.data.models.BoardGameDetailsHolder
 import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
 import io.reactivex.Observable
@@ -21,7 +21,7 @@ interface  NetworkUseCase {
 }
 
 class NetworkUseCaseImpl(
-    private val repository: Repository
+    private val bggRepository: BGGRepository
 ): NetworkUseCase {
 
     // BoardGame SearchResults observable
@@ -29,7 +29,7 @@ class NetworkUseCaseImpl(
     override val boardGameSearchResults: Observable<BoardGameSearchResults> = boardGameSearchResultsBehaviour.hide()
 
     override fun onSubmitQueryForBoardGameSearch(searchQuery: String): Disposable {
-         return repository.getBoardGameSearchResults(searchQuery)
+         return bggRepository.getBoardGameSearchResults(searchQuery)
             .subscribeOn(Schedulers.io())
             .subscribeBy (
                 onSuccess = {
@@ -42,7 +42,7 @@ class NetworkUseCaseImpl(
     }
 
     override fun onSubmitQueryForBoardGameDetails(gameId: String): Single<BoardGameDetailsHolder> {
-        return repository.getBoardGameDetailsResults(gameId)
+        return bggRepository.getBoardGameDetailsResults(gameId)
     }
 
 }

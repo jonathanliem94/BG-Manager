@@ -1,6 +1,6 @@
 package com.jonathanl.bgmanager.useCases
 
-import com.jonathanl.bgmanager.data.Repository
+import com.jonathanl.bgmanager.data.DBRepository
 import com.jonathanl.bgmanager.data.models.BoardGameSearchId
 import com.jonathanl.bgmanager.data.models.BoardGameSearchName
 import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
@@ -12,8 +12,8 @@ import org.junit.Test
 
 class NetworkUseCaseTest {
 
-    private val repository: Repository = mock()
-    private val networkUseCaseUnderTest: NetworkUseCase = NetworkUseCaseImpl(repository)
+    private val DBRepository: DBRepository = mock()
+    private val networkUseCaseUnderTest: NetworkUseCase = NetworkUseCaseImpl(DBRepository)
 
     private val testSearchQuery = "test"
     private val fakeSearchResult =
@@ -32,7 +32,7 @@ class NetworkUseCaseTest {
 
     @Test
     fun `when the search query is conducted, ensure search result is emitted from the behaviour subject correctly`() {
-        whenever(repository.getBoardGameSearchResults(testSearchQuery))
+        whenever(DBRepository.getBoardGameSearchResults(testSearchQuery))
             .thenReturn(Single.just(fakeSearchResult))
         val testObservableSearchResult = networkUseCaseUnderTest.boardGameSearchResults.test()
 
@@ -46,7 +46,7 @@ class NetworkUseCaseTest {
     @Test
     fun `when game id is valid, request for game details will be invoked`() {
         networkUseCaseUnderTest.onSubmitQueryForBoardGameDetails(testGameId)
-        verify(repository).getBoardGameDetailsResults(testGameId)
+        verify(DBRepository).getBoardGameDetailsResults(testGameId)
     }
 
 }

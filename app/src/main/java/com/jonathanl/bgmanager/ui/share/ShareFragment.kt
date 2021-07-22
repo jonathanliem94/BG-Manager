@@ -19,7 +19,7 @@ class ShareFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentShareBinding.inflate(inflater, container, false)
         shareViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.textShare.text = it

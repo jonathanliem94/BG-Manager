@@ -17,13 +17,14 @@ import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.data.models.BoardGameDetails
 import com.jonathanl.bgmanager.databinding.FragmentGameDetailsBinding
-import com.jonathanl.bgmanager.di.DaggerBoardGameDetailsComponent
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class BoardGameDetailsFragment : BaseFragment() {
 
     @Inject
@@ -37,9 +38,8 @@ class BoardGameDetailsFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
-        setUpDI()
         _binding = FragmentGameDetailsBinding.inflate(inflater, container, false)
         disposable = subscribeToBoardGameDetails()
         return binding.root
@@ -125,13 +125,6 @@ class BoardGameDetailsFragment : BaseFragment() {
             gameMinMaxPlayTimeText.text = getString(R.string.bg_details_minmaxplaytime, boardGameDetails.minPlayTime, boardGameDetails.maxPlayTime)
             gameDescriptionText.text = Html.fromHtml(boardGameDetails.description)
         }
-    }
-
-    private fun setUpDI() {
-        DaggerBoardGameDetailsComponent.builder()
-            .mainActivityComponent(getMainActivityComponent())
-            .build()
-            .inject(this)
     }
 
     override fun onDestroy() {

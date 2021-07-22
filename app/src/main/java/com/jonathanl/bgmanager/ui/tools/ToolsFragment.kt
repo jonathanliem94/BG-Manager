@@ -19,7 +19,7 @@ class ToolsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentToolsBinding.inflate(inflater, container, false)
         toolsViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.textTools.text = it

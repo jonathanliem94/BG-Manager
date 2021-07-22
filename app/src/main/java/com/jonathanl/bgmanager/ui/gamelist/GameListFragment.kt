@@ -12,8 +12,8 @@ import com.google.android.material.chip.ChipGroup
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.databinding.FragmentGameListBinding
-import com.jonathanl.bgmanager.di.DaggerGameListComponent
 import com.jonathanl.bgmanager.ui.gamelist.dialogs.AddCategoryDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -22,6 +22,7 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.ClassCastException
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class GameListFragment :
     BaseFragment(),
     GameListDragListener,
@@ -40,8 +41,7 @@ class GameListFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        setUpDI()
+    ): View {
         _binding = FragmentGameListBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
         return binding.root
@@ -145,13 +145,6 @@ class GameListFragment :
                     Log.e("GameListFragment", "subscribeToGameListObservable failed. $it")
                 }
             )
-    }
-
-    private fun setUpDI() {
-        DaggerGameListComponent.builder()
-            .mainActivityComponent(getMainActivityComponent())
-            .build()
-            .inject(this)
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {

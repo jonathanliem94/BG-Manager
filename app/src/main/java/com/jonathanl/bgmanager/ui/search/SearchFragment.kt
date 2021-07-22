@@ -10,7 +10,7 @@ import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.base.BaseFragment
 import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
 import com.jonathanl.bgmanager.databinding.FragmentSearchBinding
-import com.jonathanl.bgmanager.di.DaggerSearchComponent
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -18,6 +18,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class SearchFragment : BaseFragment() {
 
     @Inject
@@ -33,8 +34,7 @@ class SearchFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        setUpDI()
+    ): View {
         //ViewBinding, inflating the view, and setting the viewmodel
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
@@ -135,13 +135,6 @@ class SearchFragment : BaseFragment() {
             searchStatusText.visibility = View.VISIBLE
             recyclerViewSearch.visibility = View.GONE
         }
-    }
-
-    private fun setUpDI() {
-        DaggerSearchComponent.builder()
-            .mainActivityComponent(getMainActivityComponent())
-            .build()
-            .inject(this)
     }
 
     override fun onDestroyView() {

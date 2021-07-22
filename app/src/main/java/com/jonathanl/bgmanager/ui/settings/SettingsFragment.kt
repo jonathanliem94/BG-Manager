@@ -19,7 +19,7 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         settingsViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.textSettings.text = it

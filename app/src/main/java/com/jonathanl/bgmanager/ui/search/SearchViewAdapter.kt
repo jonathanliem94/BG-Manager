@@ -1,10 +1,11 @@
 package com.jonathanl.bgmanager.ui.search
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
@@ -12,7 +13,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.data.models.BoardGameSearchId
-import kotlinx.android.synthetic.main.recycler_search_view.view.*
 
 class SearchViewAdapter(private val searchViewModel: SearchViewModel):
     ListAdapter<BoardGameSearchId, SearchViewAdapter.SearchViewHolder>(BoardGameResultDiffCallback()) {
@@ -32,14 +32,18 @@ class SearchViewAdapter(private val searchViewModel: SearchViewModel):
     // ViewHolder for each data item
     class SearchViewHolder(private val cardView: CardView): RecyclerView.ViewHolder(cardView){
         internal fun bind(boardGameSearchId: BoardGameSearchId, searchViewModel: SearchViewModel){
-            val activity = cardView.context as Activity
-            cardView.apply {
-                search_result_image.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_launcher_background))
-                search_result_text.text = boardGameSearchId.boardGameSearchNameResult.gameName
-                search_result_game_id.text = boardGameSearchId.gameId
-                search_result_gotodetails_img.setOnClickListener(SearchViewOnClickMoreDetails())
-                search_result_addtogamelist_img.setOnClickListener(SearchViewOnClickAddToGameList(searchViewModel))
-            }
+
+            val searchResultImage = cardView.findViewById<ImageView>(R.id.search_result_image)
+            val searchResultText = cardView.findViewById<TextView>(R.id.search_result_text)
+            val searchResultGameId = cardView.findViewById<TextView>(R.id.search_result_game_id)
+            val searchResultDetails = cardView.findViewById<ImageView>(R.id.search_result_gotodetails_img)
+            val searchResultAddList = cardView.findViewById<ImageView>(R.id.search_result_addtogamelist_img)
+
+            searchResultImage.setImageDrawable(AppCompatResources.getDrawable(cardView.context, R.drawable.ic_launcher_background))
+            searchResultText.text = boardGameSearchId.boardGameSearchNameResult.gameName
+            searchResultGameId.text = boardGameSearchId.gameId
+            searchResultDetails.setOnClickListener(SearchViewOnClickMoreDetails())
+            searchResultAddList.setOnClickListener(SearchViewOnClickAddToGameList(searchViewModel))
         }
     }
 

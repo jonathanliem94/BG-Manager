@@ -3,13 +3,14 @@ package com.jonathanl.bgmanager.ui.gamelist
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jonathanl.bgmanager.R
 import com.jonathanl.bgmanager.data.models.GameListEntry
-import kotlinx.android.synthetic.main.recycler_gamelist_view.view.*
 
 class GameListViewAdapter(
     private val gameListDragListener: GameListDragListener,
@@ -34,14 +35,16 @@ class GameListViewAdapter(
     // ViewHolder for each data item
     class GameListViewHolder(private val cardView: CardView): RecyclerView.ViewHolder(cardView){
         internal fun bind(gameListEntry: GameListEntry, gameListDragListener: GameListDragListener){
-            cardView.apply {
-                gameListEntryText.text = gameListEntry.gameName.plus(gameListEntry.gameId)
-                reorderImage.setOnTouchListener { _, event ->
-                    if (event?.actionMasked == MotionEvent.ACTION_DOWN) {
-                        gameListDragListener.onStartDrag(this@GameListViewHolder)
-                    }
-                    true
+
+            val gameListEntryText = cardView.findViewById<TextView>(R.id.gameListEntryText)
+            val reorderImage = cardView.findViewById<ImageView>(R.id.reorderImage)
+
+            gameListEntryText.text = gameListEntry.gameName.plus(gameListEntry.gameId)
+            reorderImage.setOnTouchListener { _, event ->
+                if (event?.actionMasked == MotionEvent.ACTION_DOWN) {
+                    gameListDragListener.onStartDrag(this@GameListViewHolder)
                 }
+                true
             }
         }
     }

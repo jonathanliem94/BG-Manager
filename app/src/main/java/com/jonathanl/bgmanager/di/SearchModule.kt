@@ -1,33 +1,25 @@
 package com.jonathanl.bgmanager.di
 
-import com.jonathanl.bgmanager.ui.search.SearchFragment
+import com.jonathanl.bgmanager.data.BGGRepository
+import com.jonathanl.bgmanager.data.BGGRepositoryImpl
+import com.jonathanl.bgmanager.data.NetworkService
+import com.jonathanl.bgmanager.ui.boardgamedetails.BoardGameDetailsViewModel
 import com.jonathanl.bgmanager.ui.search.SearchViewModel
 import com.jonathanl.bgmanager.useCases.GameListUseCase
 import com.jonathanl.bgmanager.useCases.NetworkUseCase
-import dagger.Component
 import dagger.Module
 import dagger.Provides
-
-@Component(
-    modules = [SearchModule::class],
-    dependencies = [MainActivityComponent::class]
-)
-@FragmentScope
-interface SearchComponent {
-
-    fun inject(searchFragment: SearchFragment)
-
-}
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 
 @Module
+@InstallIn(ActivityComponent::class)
 object SearchModule {
 
     @Provides
-    @FragmentScope
-    fun provideSearchViewModel(
+    fun providesSearchViewModel(
         networkUseCase: NetworkUseCase,
         gameListUseCase: GameListUseCase
     ): SearchViewModel =
         SearchViewModel(networkUseCase, gameListUseCase)
-
 }

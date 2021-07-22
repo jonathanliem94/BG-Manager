@@ -1,13 +1,10 @@
 package com.jonathanl.bgmanager.data
 
-import com.jonathanl.bgmanager.data.models.BoardGameDetailsHolder
-import com.jonathanl.bgmanager.data.models.BoardGameSearchResults
 import com.jonathanl.bgmanager.data.models.GameListEntry
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 
-interface Repository {
+interface DBRepository {
 
     // Game List DB stuff
     fun getGameListEntries(): Observable<MutableList<GameListEntry>>
@@ -15,16 +12,11 @@ interface Repository {
     fun saveGameListToDB(gameList: MutableList<GameListEntry>): Completable
     fun removeGameEntryToDb(gameListEntry: GameListEntry): Completable
 
-    // Network stuff
-    fun getBoardGameSearchResults(query: String): Single<BoardGameSearchResults>
-    fun getBoardGameDetailsResults(gameId: String): Single<BoardGameDetailsHolder>
-
 }
 
-class RepositoryImpl(
-    private val gameListDbService: GameListDbService,
-    private val networkService: NetworkService
-): Repository{
+class DBRepositoryImpl(
+    private val gameListDbService: GameListDbService
+): DBRepository{
 
     private val gameListDatabaseDAO = gameListDbService.getDatabaseAccessService()
 
@@ -42,14 +34,6 @@ class RepositoryImpl(
 
     override fun removeGameEntryToDb(gameListEntry: GameListEntry): Completable {
         return gameListDatabaseDAO.deleteGameListEntry(gameListEntry)
-    }
-
-    override fun getBoardGameDetailsResults(gameId: String): Single<BoardGameDetailsHolder> {
-        return networkService.getBoardGameInfo(gameId)
-    }
-
-    override fun getBoardGameSearchResults(query: String): Single<BoardGameSearchResults> {
-        return networkService.getBoardGameSearchResults(query)
     }
 
 }
